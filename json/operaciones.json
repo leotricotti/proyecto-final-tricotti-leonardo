@@ -1,0 +1,86 @@
+[
+  {
+    "fecha": "27/07/2022",
+    "hora": "12:18:21",
+    "operacion": "Transferencias",
+    "monto": "$ 20.000.00",
+    "saldo": "$ 123.343.56"
+  },
+  {
+    "fecha": "22/07/2022",
+    "hora": "18:55:12",
+    "operacion": "Transferencia",
+    "monto": "$ 25.000.00",
+    "saldo": "$ 95.343.00"
+  },
+  {
+    "fecha": "20/07/2022",
+    "hora": "12:18:25",
+    "operacion": "Extraccion",
+    "monto": "$ 20.000.00",
+    "saldo": "$ 115.343.00"
+  },
+  {
+    "fecha": "19/07/2022",
+    "hora": "12:34:58",
+    "operacion": "Transferencia",
+    "monto": "$ 22.000.00",
+    "saldo": "$ 144.343.00"
+  },
+  {
+    "fecha": "17/07/2022",
+    "hora": "12:34:23",
+    "operacion": "Deposito",
+    "monto": "$ 30.000.00",
+    "saldo": "$ 155.343.00"
+  },
+  {
+    "fecha": "17/07/2022",
+    "hora": "08:55:08",
+    "operacion": "Pago Servicio",
+    "monto": "$ 1.942.63",
+    "saldo": "$ 122.165.36"
+  },
+  {
+    "fecha": "14/07/2022",
+    "hora": "15:55:17",
+    "operacion": "Extraccion",
+    "monto": "$ 15.000.00",
+    "saldo": "$ 125.343.54"
+  },
+  {
+    "fecha": "10/07/2022",
+    "hora": "12:18:54",
+    "operacion": "Deposito",
+    "monto": "$ 20.000.00",
+    "saldo": "$ 115.343.00"
+  },
+  {
+    "fecha": "08/07/2022",
+    "hora": "15:55:02",
+    "operacion": "Deposito",
+    "monto": "$ 15.000.00",
+    "saldo": "$ 125.343.00"
+  },
+  {
+    "fecha": "05/07/2022",
+    "hora": "10:33:32",
+    "operacion": "Pago Servicio",
+    "monto": "$ 5.362.87",
+    "saldo": "$ 127.156.65"
+  },
+  {
+    "fecha": "03/07/2022",
+    "hora": "12:34:32",
+    "operacion": "Extraccion",
+    "monto": "$ 30.000.00",
+    "saldo": "$ 95.343.00"
+  },
+  {
+    "fecha": "01/07/2022",
+    "hora": "11:25:45",
+    "operacion": "Pago Servicio",
+    "monto": "$ 2.572.27",
+    "saldo": "$ 130.253.65"
+  }
+]
