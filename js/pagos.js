@@ -1,23 +1,8 @@
-//Variable que recupera la informacion del saldo del local storage
-let saldoCajaOperable = localStorage.getItem("saldo");
-//Funcion que convierte el dato recuperado del localstorage a numero
-const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
-//Variable que almacena el dato convertido a numero
-let saldoOperable = convertirStorageANumero();
-//Funcion que captura la informacion de los servicios por vencer y la copia en el local storage 
-function jsonToArray(){fetch("../../json/serviciosPorVencer.json")
-  .then((resp) => resp.json())
-  .then((data) => {
-    servicios = data;
-    guardarLocal("servicios", JSON.stringify(servicios));
-})}
-//Llamada a la funcion
-jsonToArray();
-//Funcion que inyecta la tabla cuentas habilitadas a recibir transferencias en el html
+//Funcion que inyecta la tabla con la informacion de los servicios por vencer 
 function mostrarServicios() {
-  //Codigo que recupera los servicios a pagar simulados almacenados en el local storage
+  //Codigo que recupera los servicios a pagar almacenados en el localstorage
   serviciosLocalStorage = JSON.parse(localStorage.getItem("servicios"));
-  //Código que crea el elemento tabla y le asigna sus clases
+  //Código que crea el elemento tabla y le asigna sus clases de bootstrap
   let table = document.createElement("table");
   table.className = "table table-hover";
   //Código que crea la cabeza de la tabla
@@ -53,35 +38,29 @@ function mostrarServicios() {
   tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 }
-//Funcion que coinvierte un numero al formato de pesos argentinos
-numeroAPesos = (dinero) => {
-  return (dinero = new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-  }).format(dinero));
-}
 //Llamada a la funcion que inyecta al html la tabla con las cuentas habilitadas
 mostrarServicios();
+//Codigo que captura el campo input
 let pagosInput = document.getElementById("pagos-input");
 //Codigo que captura el boton que confirma la operacion
 let capturarValor = document.getElementById("pagos-submit");
 //Operador que desestructura el array de objetos
 const [a, b, c, d, e] = serviciosLocalStorage;
+//Funcion que actualiza el saldo de la caja de ahorro
+const actualizarSaldoCajaAhorro = (saldo, importe) => saldo - importe;
 //Funcion que captura la cuenta seleccionada y devuelve un campo para ingresar el importe que se desea transferir
 const seleccionarServicio = (inputValue) =>{
   if(inputValue == "01"){
-    //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
-    const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${a.servicio} por el importe de ${numeroAPesos(a.numero)}? </p>`;
+    confirmarOperacion();
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
-    //Funcion que actualiza el saldo de la caja de ahorro
-    actualizarSaldoCajaAhorro = () => saldoOperable - a.numero; 
-    actualizarSaldoStorage(); 
+    //Llamado a la funcion que actualiza el saldo de la caja de ahorro
+    nuevoSaldo = actualizarSaldoCajaAhorro(saldoOperable, a.numero); 
+    comprobarSaldo();
   }else if(inputValue == "02"){
     //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
     const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${b.servicio} por el importe de ${numeroAPesos(b.numero)}? </p>`;
+    text.innerHTML = `<p class='text'> Desea pagar el servicio ${b.servicio} por el importe de ${numeroADinero(b.numero)}? </p>`;
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Funcion que actualiza el saldo de la caja de ahorro
@@ -90,7 +69,7 @@ const seleccionarServicio = (inputValue) =>{
   }else if(inputValue == "03"){
     //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
     const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${c.servicio} por el importe de ${numeroAPesos(c.numero)}? </p>`;
+    text.innerHTML = `<p class='text'> Desea pagar el servicio ${c.servicio} por el importe de ${numeroADinero(c.numero)}? </p>`;
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Funcion que actualiza el saldo de la caja de ahorro
@@ -99,7 +78,7 @@ const seleccionarServicio = (inputValue) =>{
   }else if(inputValue == "04"){
     //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
     const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${d.servicio} por el importe de ${numeroAPesos(d.numero)}? </p>`;
+    text.innerHTML = `<p class='text'> Desea pagar el servicio ${d.servicio} por el importe de ${numeroADinero(d.numero)}? </p>`;
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Funcion que actualiza el saldo de la caja de ahorro
@@ -108,14 +87,13 @@ const seleccionarServicio = (inputValue) =>{
   }else if(inputValue == "05"){
     //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
     const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${e.servicio} por el importe de ${numeroAPesos(e.numero)}? </p>`;
+    text.innerHTML = `<p class='text'> Desea pagar el servicio ${e.servicio} por el importe de ${numeroADinero(e.numero)}? </p>`;
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Funcion que actualiza el saldo de la caja de ahorro
     actualizarSaldoCajaAhorro = () => saldoOperable - e.numero;
     actualizarSaldoStorage(); 
-  }//Devuelve un alert si la opcion ingresada es invalida
-  else{
+  }else{
     Swal.fire({
       icon: 'warning',
       title: 'Ingrese una opción valida',
@@ -126,38 +104,51 @@ const seleccionarServicio = (inputValue) =>{
       }
     });
   }
-  //Codigo que mantiene el contador de click en cero
-  contadorClicks --;
-  //Codigo que limpia el input
-  pagosInput.value = ""; 
 }
-//Funcion que actualiza el saldo almacenado en el localstorage
-const actualizarSaldoStorage = () =>
-  (saldoCajaAhorro = localStorage.setItem(
-    "saldo",
-    actualizarSaldoCajaAhorro()
-  ));
-//Codigo que establece un contador que permite armar el condicional
-let contadorClicks = 0;
+const confirmarOperacion = () => {
+  Swal.fire({
+    icon: "question",
+    title: `Desea pagar el servicio ${a.servicio} por el importe de ${numeroADinero(a.numero)}?`,
+    confirmButtonText: 'Save',
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "Aceptar",
+    showCancelButton: true,
+    cancelButtonText: "Cancelar",
+    showClass: {
+      popup: "animate__animated animate__fadeIn",
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire(
+        `Operación realizada con éxito. Su saldo es ${numeroADinero(nuevoSaldo)}`
+      ).then(function () {
+        window.location.href = "../opcion/opcion.html";
+      })
+    } else if (result.isDismissed) {
+      Swal.fire(
+        'Operación cancelada', '', 'info'
+      ).then(function () {
+        window.location.href = "../opcion/opcion.html";
+      })
+    }
+  })
+}
 //Funcion que alterna las llamadas a las funciones sobre el mismo boton html
 capturarValor.addEventListener('click', function() {
-  if (contadorClicks == 0) {
-    //Llamada a la funcion que selecciona la cuenta a la cual se desea transferir dinero
-    seleccionarServicio(pagosInput.value);
-    //Codigo que agrega una unidad al contador
-    contadorClicks = 1;
-    console.log(contadorClicks);
-  }else if (contadorClicks == 1) {
-    Swal.fire({
-      icon: 'success',
-      title: `Operación realizada con éxito. Su saldo es ${numeroAPesos(actualizarSaldoCajaAhorro())}`,
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Aceptar',
-      showClass: {
-        popup: 'animate__animated animate__fadeIn'
-      }
-    }).then(function(){
-      window.location.href = "../opcion/opcion.html";
-    });
-  }
+  seleccionarServicio(pagosInput.value);
 });
+
+const comprobarSaldo = () => {
+  if(nuevoSaldo <= 0){     
+    Swal.fire({
+    icon: 'warning',
+    title: 'Saldo insuficiente',
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'Aceptar',
+    showClass: {
+      popup: 'animate__animated animate__fadeIn'
+    }
+  })}else{
+    actualizarSaldoStorage(); 
+  }
+}

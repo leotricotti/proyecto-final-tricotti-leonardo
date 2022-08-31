@@ -49,12 +49,6 @@ const actualizarSaldoCajaAhorro = () => {
   saldoCajaAhorro = parsearDineroDepositado() + convertirStorageANumero();
   return saldoCajaAhorro;
 };
-//Funcion que actualiza el saldo almacenado en el localstorage
-const actualizarSaldoStorage = () =>
-  (saldoCajaAhorro = localStorage.setItem(
-    saldo,
-    actualizarSaldoCajaAhorro()
-  ));
 //Funcion que convierte a pesos el dato parseado
 const numeroADinero = () => numeroAPesos(depositar());
 //Codigo que convierte a pesos el saldo simulado

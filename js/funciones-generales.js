@@ -1,3 +1,25 @@
+/** Carga de datos al localstorage **/
+
+//Funcion que captura la informacion de los servicios por vencer del local json y la copia en el localstorage 
+function jsonToStorage(){fetch("../../json/serviciosPorVencer.json")
+  .then((resp) => resp.json())
+  .then((data) => {
+    servicios = data;
+    guardarLocal("servicios", JSON.stringify(servicios));
+})}
+//Llamada a la funcion
+jsonToStorage();
+
+/** Recuperacion informacion saldo localstorage **/
+
+//Variable que recupera el saldo de la caja de ahorro del local storage
+let saldoCajaOperable = localStorage.getItem("saldo");
+//Funcion que convierte el dato recuperado del localstorage a numero
+const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
+//Variable que almacena el dato convertido a numero
+let saldoOperable = convertirStorageANumero();
+
+
 //Funcion que coinvierte un numero al formato de pesos argentinos
 const numeroADinero = (dinero) => {
   return (dinero = new Intl.NumberFormat("es-AR", {
@@ -24,7 +46,9 @@ const guardarLocal = (clave, valor) => localStorage.setItem(clave, valor);
 //Llamadas a la funcion para guardar los datos necesarios para iniciar el programa
 guardarLocal("cuentas", JSON.stringify(cuentas));
 
-
-
-
-
+//Funcion que actualiza el saldo almacenado en el storage
+const actualizarSaldoStorage = () =>
+  (saldoCajaAhorro = localStorage.setItem(
+    "saldo",
+    nuevoSaldo
+  ));
