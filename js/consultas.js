@@ -50,7 +50,7 @@ function capturarOperaciones(){fetch("../../json/operaciones.json")
     let operaciones = data;
     guardarLocal("operaciones", JSON.stringify(operaciones));
 })}
-
+//Llamada a la funcion
 capturarOperaciones();
 //Funcion que al consultar los movimientos devuelve una tabla con los movimientos de las cuentas bancarias simuladas
 function mostarMovimientos() {

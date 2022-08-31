@@ -1,51 +1,11 @@
 //Variable que recupera la informacion del local storage
-let saldoCajaOperable = localStorage.getItem(saldo);
+let saldoCajaOperable = localStorage.getItem("saldo");
 //Funcion que convierte el dato recuperado del localstorage a numero
 const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
 //Variable que almacena el dato convertido a numero
 let saldoOperable = convertirStorageANumero();
-//Array que contiene los servicios proximos a vencer 
-const serviciosPorVencer = [];
-//Funcion que carga las cuentas habilitadas para recibir transferencias
-const cargarServiciosPorVencer = (arr) => {
-  arr.push({
-    id: "01",
-    servicio: "Edesur",
-    vencimiento: "31/08/2022",
-    importe: "$ 5.8056,23",
-    numero: 5805.23
-  });
-  arr.push({
-    id: "02",
-    servicio: "AySA",
-    vencimiento: "05/09/2022",
-    importe: "$ 1.553,80",
-    numero: 1553.80
-  });
-  arr.push({
-    id: "03",
-    servicio: "Movistar Hogar",
-    vencimiento: "08/09/2022",
-    importe: "$ 4.536,58",
-    numero: 4536.58
-  });
-  arr.push({
-    id: "04",
-    servicio: "Metrogas",
-    vencimiento: "29/08/2022",
-    importe: "$ 2.256,48",
-    numero: 2256.48
-  });
-  arr.push({
-    id: "05",
-    servicio: "Personal",
-    vencimiento: "27/08/2022",
-    importe: "$ 3.526,32",
-    numero: 3526.32
-  });
-}
-//Llamada a la funcion que carga las cuentas en el array de cuentas habilitadas
-cargarServiciosPorVencer(serviciosPorVencer);
+
+
 //Funcion que inyecta la tabla cuentas habilitadas a recibir transferencias en el html
 function mostrarServicios(...array) {
   //Código que crea el elemento tabla y le asigna sus clases
