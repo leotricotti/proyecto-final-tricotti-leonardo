@@ -1,13 +1,22 @@
-//Variable que recupera la informacion del local storage
+//Variable que recupera la informacion del saldo del local storage
 let saldoCajaOperable = localStorage.getItem("saldo");
 //Funcion que convierte el dato recuperado del localstorage a numero
 const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
 //Variable que almacena el dato convertido a numero
 let saldoOperable = convertirStorageANumero();
-
-
+//Funcion que captura la informacion de los servicios por vencer y la copia en el local storage 
+function jsonToArray(){fetch("../../json/serviciosPorVencer.json")
+  .then((resp) => resp.json())
+  .then((data) => {
+    servicios = data;
+    guardarLocal("servicios", JSON.stringify(servicios));
+})}
+//Llamada a la funcion
+jsonToArray();
 //Funcion que inyecta la tabla cuentas habilitadas a recibir transferencias en el html
-function mostrarServicios(...array) {
+function mostrarServicios() {
+  //Codigo que recupera los servicios a pagar simulados almacenados en el local storage
+  serviciosLocalStorage = JSON.parse(localStorage.getItem("servicios"));
   //Código que crea el elemento tabla y le asigna sus clases
   let table = document.createElement("table");
   table.className = "table table-hover";
@@ -27,14 +36,13 @@ function mostrarServicios(...array) {
   let tableBody = document.createElement("tbody");
   tableBody.className = "table-group-divider";
   //Codigo que recorre el array de cuentas creado anteriormente y asigna cada elemento a su culumna
-  for (const cuenta of array) {
-    console.log()
+  for (const servicio of serviciosLocalStorage) {
     tableBody.innerHTML += `
         <tr>
-            <td>${cuenta.id}</td>
-            <td>${cuenta.servicio}</td>
-            <td>${cuenta.vencimiento}</td>
-            <td>${cuenta.importe}</td>
+            <td>${servicio.id}</td>
+            <td>${servicio.servicio}</td>
+            <td>${servicio.vencimiento}</td>
+            <td>${servicio.importe}</td>
         </tr>
         `;
   }
@@ -53,12 +61,12 @@ numeroAPesos = (dinero) => {
   }).format(dinero));
 }
 //Llamada a la funcion que inyecta al html la tabla con las cuentas habilitadas
-mostrarServicios(...serviciosPorVencer);
+mostrarServicios();
 let pagosInput = document.getElementById("pagos-input");
 //Codigo que captura el boton que confirma la operacion
 let capturarValor = document.getElementById("pagos-submit");
 //Operador que desestructura el array de objetos
-const [a, b, c, d, e] = serviciosPorVencer;
+const [a, b, c, d, e] = serviciosLocalStorage;
 //Funcion que captura la cuenta seleccionada y devuelve un campo para ingresar el importe que se desea transferir
 const seleccionarServicio = (inputValue) =>{
   if(inputValue == "01"){
@@ -126,7 +134,7 @@ const seleccionarServicio = (inputValue) =>{
 //Funcion que actualiza el saldo almacenado en el localstorage
 const actualizarSaldoStorage = () =>
   (saldoCajaAhorro = localStorage.setItem(
-    saldo,
+    "saldo",
     actualizarSaldoCajaAhorro()
   ));
 //Codigo que establece un contador que permite armar el condicional
@@ -149,7 +157,7 @@ capturarValor.addEventListener('click', function() {
         popup: 'animate__animated animate__fadeIn'
       }
     }).then(function(){
-      window.location.href = "opcion-pagos.html";
+      window.location.href = "../opcion/opcion.html";
     });
   }
 });
