@@ -52,3 +52,8 @@ const actualizarSaldoStorage = () => {
   localStorage.setItem ("saldo", saldoCajaAhorro);
 }
 
+//Funcion que captura la fecha en que se realiza la operación
+const capturarDia = () => new Date().toLocaleDateString();
+//Funcion que captura la hora en que se realiza la operacion
+const capturarHora = () => new Date().toLocaleTimeString();
+
