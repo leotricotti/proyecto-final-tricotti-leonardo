@@ -55,6 +55,8 @@ const seleccionarServicio = (inputValue) =>{
     actualizarSaldoCajaAhorro = () => saldoOperable - a.numero;
     //Llamada a la funcion
     comprobarSaldo(a.servicio, a.numero);
+    //Funcion que retorna el monto abonado como componente del objeto operacion
+    cargarMonto = () => a.numero;
   }else if(inputValue == "02"){
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
@@ -62,6 +64,8 @@ const seleccionarServicio = (inputValue) =>{
     actualizarSaldoCajaAhorro = () => saldoOperable - b.numero;
     //Llamada a la funcion
     comprobarSaldo(b.servicio, b.numero);
+    //Funcion que retorna el monto abonado como componente del objeto operacion
+    cargarMonto = () => b.numero;
   }else if(inputValue == "03"){
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
@@ -69,6 +73,8 @@ const seleccionarServicio = (inputValue) =>{
     actualizarSaldoCajaAhorro = () => saldoOperable - c.numero;
     //Llamada a la funcion
     comprobarSaldo(c.servicio, c.numero);
+    //Funcion que retorna el monto abonado como componente del objeto operacion
+    cargarMonto = () => c.numero;
   }else if(inputValue == "04"){
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
@@ -76,6 +82,8 @@ const seleccionarServicio = (inputValue) =>{
     actualizarSaldoCajaAhorro = () => saldoOperable - d.numero;
     //Llamada a la funcion
     comprobarSaldo(d.servicio, d.numero);
+    //Funcion que retorna el monto abonado como componente del objeto operacion
+    cargarMonto = () => d.numero;
   }else if(inputValue == "05"){
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
@@ -83,6 +91,8 @@ const seleccionarServicio = (inputValue) =>{
     actualizarSaldoCajaAhorro = () => saldoOperable - e.numero;
     //Llamada a la funcion
     comprobarSaldo(e.servicio, e.numero);
+    //Funcion que retorna el monto abonado como componente del objeto operacion
+    cargarMonto = () => e.numero;
   }else{
     Swal.fire({
       icon: 'warning',
@@ -115,6 +125,7 @@ const confirmarOperacion = (a, b) => {
       ).then(function () {
         actualizarSaldoCajaAhorro();
         actualizarSaldoStorage();
+        cargarOperacion();
         window.location.href = "../opcion/opcion.html";
       })
     } else if (result.isDismissed) {
@@ -159,3 +170,35 @@ const comprobarSaldo = (a, b) => {
   }
 }
 
+// Constructor del objeto operaciones
+class Operacion {
+  constructor(fecha, hora, operacion, monto, saldo) {
+    this.fecha = fecha;
+    this.hora = hora;
+    this.operacion = operacion;
+    this.monto = monto;
+    this.saldo = saldo;
+  }
+}
+//Codigo que informa el tipo de operacion
+const nombrarOperacion = () => "Pago Servicio";
+const crearOperacion = () => {
+  nuevaOperacion = new Operacion(
+    capturarDia(),
+    capturarHora(),
+    nombrarOperacion(),
+    numeroADinero(cargarMonto()),
+    numeroADinero(actualizarSaldoCajaAhorro())
+  );
+  return nuevaOperacion;
+}
+let serviciosPagados = [];
+//Codigo que crea la variable donde se almacenaran las operaciones simuladas
+let serviciosPagadosLocalStorage = (localStorage.getItem("serviciosPagados"));
+//Operador avanzado que verifica si existe en el localstorage el objeto operaciones dolar, si no es así lo crea
+serviciosPagadosLocalStorage == null && localStorage.setItem("serviciosPagados", serviciosPagados);
+//Funcion que almacena las nuevas operaciones en el localstorage
+const cargarOperacion = () => {
+  serviciosPagados.unshift(crearOperacion());
+  guardarLocal("serviciosPagados", JSON.stringify(serviciosPagados));
+}
