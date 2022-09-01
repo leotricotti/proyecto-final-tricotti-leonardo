@@ -148,13 +148,6 @@ dolaresComprados.onclick = () => {
 }
 //Codigo que informa el tipo de operacion
 const nombrarOperacion = () => "Compra dolares";
-//Codigo que actualiza el saldo de la caja de ahorro simulada
-const actualizarSaldoCajaAhorro = () => {
-  saldoCajaAhorro = convertirStorageANumero() - comprarDolares();
-  return saldoCajaAhorro;
-}
-//Funcion que actualiza el saldo almacenado en el localstorage
-const actualizarSaldoStorage = () => (saldoCajaAhorro = localStorage.setItem("saldo", actualizarSaldoCajaAhorro()));
 //Funcion que captura la fecha en que se realiza la operación
 const capturarDia = () => new Date().toLocaleDateString();
 //Funcion que captura la hora en que se realiza la operacion
