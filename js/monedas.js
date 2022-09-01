@@ -14,10 +14,6 @@ class Operacion {
     this.saldo = saldo;
   }
 }
-//Variable que recupera la informacion del local storage
-let saldoCajaOperable = localStorage.getItem("saldo");
-//Funcion que convierte el dato recuperado del localstorage a numero
-const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
 //Variables necesarias para operar
 let valorDolarCompra;
 let valorDolarVenta;
@@ -148,10 +144,6 @@ dolaresComprados.onclick = () => {
 }
 //Codigo que informa el tipo de operacion
 const nombrarOperacion = () => "Compra dolares";
-//Funcion que captura la fecha en que se realiza la operación
-const capturarDia = () => new Date().toLocaleDateString();
-//Funcion que captura la hora en que se realiza la operacion
-const capturarHora = () => new Date().toLocaleTimeString();
 //Codigo que convierte a pesos el saldo simulado
 const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
 //Funcion que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
@@ -175,3 +167,4 @@ const cargarOperacion = () => {
   guardarLocal("operacionesDolar", JSON.stringify(operacionesDolar));
 }
 
+actualizarSaldoCajaAhorro = () => saldoOperable - comprarDolares();

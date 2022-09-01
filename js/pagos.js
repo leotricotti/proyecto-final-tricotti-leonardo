@@ -123,10 +123,11 @@ const confirmarOperacion = (a, b) => {
       Swal.fire(
         `Operación realizada con éxito. Su saldo es ${numeroADinero(actualizarSaldoCajaAhorro())}`
       ).then(function () {
+        window.location.href = "../opcion/opcion.html";
         actualizarSaldoCajaAhorro();
         actualizarSaldoStorage();
+        crearOperacion();
         cargarOperacion();
-        window.location.href = "../opcion/opcion.html";
       })
     } else if (result.isDismissed) {
       Swal.fire(
@@ -192,7 +193,7 @@ const crearOperacion = () => {
   );
   return nuevaOperacion;
 }
-let serviciosPagados = [];
+const serviciosPagados = [];
 //Codigo que crea la variable donde se almacenaran las operaciones simuladas
 let serviciosPagadosLocalStorage = (localStorage.getItem("serviciosPagados"));
 //Operador avanzado que verifica si existe en el localstorage el objeto operaciones dolar, si no es así lo crea
