@@ -47,8 +47,8 @@ const guardarLocal = (clave, valor) => localStorage.setItem(clave, valor);
 guardarLocal("cuentas", JSON.stringify(cuentas));
 
 //Funcion que actualiza el saldo almacenado en el storage
-const actualizarSaldoStorage = () =>
-  (saldoCajaAhorro = localStorage.setItem(
-    "saldo",
-    nuevoSaldo
-  ));
+const actualizarSaldoStorage = () => {
+  saldoCajaAhorro =  actualizarSaldoCajaAhorro();
+  localStorage.setItem ("saldo", saldoCajaAhorro);
+}
+

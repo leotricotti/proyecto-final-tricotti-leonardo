@@ -1,9 +1,3 @@
-//Variable que recupera la informacion del local storage
-let saldoCajaOperable = localStorage.getItem(saldo);
-console.log(saldoCajaOperable);
-//Funcion que convierte el dato recuperado del localstorage a numero
-const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
-console.log(convertirStorageANumero());
 //Codigo que captura el boton que confirma la operacion
 const captura = document.getElementById("depositos-submit");
 //Codigo que captura el boton que modifica la operacion
@@ -49,15 +43,13 @@ const actualizarSaldoCajaAhorro = () => {
   saldoCajaAhorro = parsearDineroDepositado() + convertirStorageANumero();
   return saldoCajaAhorro;
 };
-//Funcion que convierte a pesos el dato parseado
-const numeroADinero = () => numeroAPesos(depositar());
 //Codigo que convierte a pesos el saldo simulado
-const convertirSaldoADinero = () => numeroAPesos(actualizarSaldoCajaAhorro());
+const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
 //Funcion que dispara un alert que confirma o cancela la operación
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
-    title: `Desea depositar la suma de ${numeroADinero()} ?`,
+    title: `Desea depositar la suma de ${numeroADinero(depositar())} ?`,
     confirmButtonText: 'Save',
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",

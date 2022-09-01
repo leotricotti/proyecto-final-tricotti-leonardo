@@ -1,5 +1,5 @@
 //Funcion que inyecta la tabla con la informacion de los servicios por vencer 
-function mostrarServicios() {
+const mostrarServicios = () => {
   //Codigo que recupera los servicios a pagar almacenados en el localstorage
   serviciosLocalStorage = JSON.parse(localStorage.getItem("servicios"));
   //Código que crea el elemento tabla y le asigna sus clases de bootstrap
@@ -46,53 +46,43 @@ let pagosInput = document.getElementById("pagos-input");
 let capturarValor = document.getElementById("pagos-submit");
 //Operador que desestructura el array de objetos
 const [a, b, c, d, e] = serviciosLocalStorage;
-//Funcion que actualiza el saldo de la caja de ahorro
-const actualizarSaldoCajaAhorro = (saldo, importe) => saldo - importe;
 //Funcion que captura la cuenta seleccionada y devuelve un campo para ingresar el importe que se desea transferir
 const seleccionarServicio = (inputValue) =>{
   if(inputValue == "01"){
-    confirmarOperacion();
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
-    //Llamado a la funcion que actualiza el saldo de la caja de ahorro
-    nuevoSaldo = actualizarSaldoCajaAhorro(saldoOperable, a.numero); 
-    comprobarSaldo();
+    //Variable que almacena el resultado de la operacion
+    actualizarSaldoCajaAhorro = () => saldoOperable - a.numero;
+    //Llamada a la funcion
+    comprobarSaldo(a.servicio, a.numero);
   }else if(inputValue == "02"){
-    //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
-    const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${b.servicio} por el importe de ${numeroADinero(b.numero)}? </p>`;
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
-    //Funcion que actualiza el saldo de la caja de ahorro
-    actualizarSaldoCajaAhorro = () => saldoOperable - b.numero; 
-    actualizarSaldoStorage(); 
+    //Variable que almacena el resultado de la operacion
+    actualizarSaldoCajaAhorro = () => saldoOperable - b.numero;
+    //Llamada a la funcion
+    comprobarSaldo(b.servicio, b.numero);
   }else if(inputValue == "03"){
-    //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
-    const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${c.servicio} por el importe de ${numeroADinero(c.numero)}? </p>`;
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
-    //Funcion que actualiza el saldo de la caja de ahorro
-    actualizarSaldoCajaAhorro = () => saldoOperable - c.numero; 
-    actualizarSaldoStorage(); 
+    //Variable que almacena el resultado de la operacion
+    actualizarSaldoCajaAhorro = () => saldoOperable - c.numero;
+    //Llamada a la funcion
+    comprobarSaldo(c.servicio, c.numero);
   }else if(inputValue == "04"){
-    //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
-    const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${d.servicio} por el importe de ${numeroADinero(d.numero)}? </p>`;
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
-    //Funcion que actualiza el saldo de la caja de ahorro
-    actualizarSaldoCajaAhorro = () => saldoOperable - d.numero; 
-    actualizarSaldoStorage(); 
+    //Variable que almacena el resultado de la operacion
+    actualizarSaldoCajaAhorro = () => saldoOperable - d.numero;
+    //Llamada a la funcion
+    comprobarSaldo(d.servicio, d.numero);
   }else if(inputValue == "05"){
-    //Codigo para cambiar el subtitulo del simulador y agrega el data del titular de la cuenta como medida de control
-    const text = document.querySelector(".text");
-    text.innerHTML = `<p class='text'> Desea pagar el servicio ${e.servicio} por el importe de ${numeroADinero(e.numero)}? </p>`;
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
-    //Funcion que actualiza el saldo de la caja de ahorro
+    //Variable que almacena el resultado de la operacion
     actualizarSaldoCajaAhorro = () => saldoOperable - e.numero;
-    actualizarSaldoStorage(); 
+    //Llamada a la funcion
+    comprobarSaldo(e.servicio, e.numero);
   }else{
     Swal.fire({
       icon: 'warning',
@@ -105,10 +95,11 @@ const seleccionarServicio = (inputValue) =>{
     });
   }
 }
-const confirmarOperacion = () => {
+//Funcion que confirma la operacion via un alert
+const confirmarOperacion = (a, b) => {
   Swal.fire({
     icon: "question",
-    title: `Desea pagar el servicio ${a.servicio} por el importe de ${numeroADinero(a.numero)}?`,
+    title: `Desea pagar el servicio ${a} por el importe de ${numeroADinero(b)} ?`,
     confirmButtonText: 'Save',
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
@@ -120,35 +111,51 @@ const confirmarOperacion = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire(
-        `Operación realizada con éxito. Su saldo es ${numeroADinero(nuevoSaldo)}`
+        `Operación realizada con éxito. Su saldo es ${numeroADinero(actualizarSaldoCajaAhorro())}`
       ).then(function () {
+        actualizarSaldoCajaAhorro();
+        actualizarSaldoStorage();
         window.location.href = "../opcion/opcion.html";
       })
     } else if (result.isDismissed) {
       Swal.fire(
-        'Operación cancelada', '', 'info'
+        'Operación Cancelada', '', 'info'
       ).then(function () {
         window.location.href = "../opcion/opcion.html";
       })
     }
   })
 }
-//Funcion que alterna las llamadas a las funciones sobre el mismo boton html
+//Funcion que captura la seleccion realizada por el usuario
 capturarValor.addEventListener('click', function() {
   seleccionarServicio(pagosInput.value);
 });
-
-const comprobarSaldo = () => {
-  if(nuevoSaldo <= 0){     
+//Codigo que captura el boton que modifica la operacion
+const clean = document.getElementById("limpiar-campo");
+// Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a depositar
+clean.onclick = () => {
+  pagosInput.value = "";
+}
+//Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
+const comprobarSaldo = (a, b) => {
+  if(saldoCajaAhorro <= 0){     
     Swal.fire({
     icon: 'warning',
-    title: 'Saldo insuficiente',
+    title: 'Saldo Insuficiente',
     confirmButtonColor: '#3085d6',
     confirmButtonText: 'Aceptar',
     showClass: {
       popup: 'animate__animated animate__fadeIn'
     }
-  })}else{
-    actualizarSaldoStorage(); 
+  }).then(() => {
+      Swal.fire(
+        'Operación Cancelada', '', 'error'
+      ).then(function () {
+        window.location.href = "../opcion/opcion.html";
+      })
+    })
+  } else {
+    confirmarOperacion(a, b);
   }
 }
+

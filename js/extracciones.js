@@ -1,7 +1,3 @@
-//Variable que recupera la informacion del local storage
-let saldoCajaOperable = localStorage.getItem("saldo");
-//Funcion que convierte el dato recuperado del localstorage a numero
-const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
 //Codigo que captura el boton que confirma la operacion
 const captura = document.getElementById("extracciones-submit");
 //Codigo que captura el boton que modifica la operacion 
@@ -23,12 +19,6 @@ const actualizarSaldoCajaAhorro = () => {
   saldoCajaAhorro = convertirStorageANumero() - parsearDineroExtraido();
   return saldoCajaAhorro;
 }
-//Funcion que actualiza el saldo almacenado en el localstorage
-const actualizarSaldoStorage = () =>
-  (saldoCajaAhorro = localStorage.setItem(
-    saldo,
-    actualizarSaldoCajaAhorro()
-  ));
 //Funcion que convierte al formato de moneda local el dato parseado
 const numeroAPesos = () => numeroADinero(extraerDinero());
 //Codigo que convierte al formato de moneda local el saldo simulado
