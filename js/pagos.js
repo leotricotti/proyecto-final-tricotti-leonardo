@@ -119,7 +119,7 @@ const confirmarOperacion = (a, b) => {
       })
     } else if (result.isDismissed) {
       Swal.fire(
-        'Operación Cancelada', '', 'info'
+        'Operación Cancelada', '', 'error'
       ).then(function () {
         window.location.href = "../opcion/opcion.html";
       })
