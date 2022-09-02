@@ -1,24 +1,22 @@
-/** Carga de datos al localstorage **/
+/** Creacion y recuperacion de la informacion saldo localstorage **/
 
-//Funcion que captura la informacion de los servicios por vencer del local json y la copia en el localstorage 
-function jsonToStorage(){fetch("../../json/serviciosPorVencer.json")
-  .then((resp) => resp.json())
-  .then((data) => {
-    servicios = data;
-    guardarLocal("servicios", JSON.stringify(servicios));
-})}
-//Llamada a la funcion
-jsonToStorage();
-
-/** Recuperacion informacion saldo localstorage **/
-
+//Codigo que crea la variable donde se almacenará el saldo simulado
+let saldoCajaAhorro = (localStorage.getItem("saldo"));
+//Operador avanzado que verifica si existe el objeto saldo, si no es así lo crea
+saldoCajaAhorro == null && localStorage.setItem("saldo", 150000);
 //Variable que recupera el saldo de la caja de ahorro del local storage
 let saldoCajaOperable = localStorage.getItem("saldo");
 //Funcion que convierte el dato recuperado del localstorage a numero
 const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
 //Variable que almacena el dato convertido a numero
 let saldoOperable = convertirStorageANumero();
+//Funcion que actualiza el saldo almacenado en el storage
+const actualizarSaldoStorage = () => {
+  saldoCajaAhorro =  actualizarSaldoCajaAhorro();
+  localStorage.setItem ("saldo", saldoCajaAhorro);
+}
 
+/* Funciones generales */
 
 //Funcion que coinvierte un numero al formato de pesos argentinos
 const numeroADinero = (dinero) => {
@@ -27,10 +25,26 @@ const numeroADinero = (dinero) => {
     currency: "ARS",
   }).format(dinero));
 }
-//Codigo que crea la variable donde se almacenará el saldo simulado
-let saldoCajaAhorro = (localStorage.getItem("saldo"));
-//Operador avanzado que verifica si existe el objeto saldo, si no es así lo crea
-saldoCajaAhorro == null && localStorage.setItem("saldo", 150000);
+/** Carga de datos al localstorage **/
+
+//Funcion que captura la informacion de los servicios por vencer del local json y la copia en el localstorage 
+function jsonToStorageServicios(){fetch("../../json/serviciosPorVencer.json")
+  .then((resp) => resp.json())
+  .then((data) => {
+    servicios = data;
+    guardarLocal("servicios", JSON.stringify(servicios));
+})}
+//Llamada a la funcion
+jsonToStorageServicios();
+//Funcion que captura la informacion de las operaciones simuladas del local json y la copia en el localstorage 
+function jsonToStorageOperaciones(){fetch("../../json/operaciones.json")
+  .then((resp) => resp.json())
+  .then((data) => {
+    operaciones = data;
+    guardarLocal("operaciones", JSON.stringify(operaciones));
+})}
+//Llamada a la funcion
+jsonToStorageOperaciones();
 //Creacion del array que va a contener las cuentas simuladas
 const cuentas = [];
 //Funcion que carga los objetos literales que contienen la informacion de las cuentas bancarias simuladas al array de cuentas
@@ -45,15 +59,4 @@ cargarCuentas();
 const guardarLocal = (clave, valor) => localStorage.setItem(clave, valor);
 //Llamadas a la funcion para guardar los datos necesarios para iniciar el programa
 guardarLocal("cuentas", JSON.stringify(cuentas));
-
-//Funcion que actualiza el saldo almacenado en el storage
-const actualizarSaldoStorage = () => {
-  saldoCajaAhorro =  actualizarSaldoCajaAhorro();
-  localStorage.setItem ("saldo", saldoCajaAhorro);
-}
-
-//Funcion que captura la fecha en que se realiza la operación
-const capturarDia = () => new Date().toLocaleDateString();
-//Funcion que captura la hora en que se realiza la operacion
-const capturarHora = () => new Date().toLocaleTimeString();
 
