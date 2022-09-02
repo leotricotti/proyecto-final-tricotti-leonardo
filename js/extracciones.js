@@ -26,7 +26,6 @@ const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
 //Funcion que captura la informacion brindada por el usuario y la convierte en un objeto
 captura.onclick = () => {
   //Llamada a las funciones declaradas
-  actualizarSaldoCajaAhorro();
   comprobarSaldo();
 };
 // Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a extraer
@@ -48,7 +47,6 @@ const confirmarOperacion = () => {
       popup: "animate__animated animate__fadeIn",
     },
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       Swal.fire(
         "Operación realizada con exito. Su saldo es " + convertirSaldoADinero(),
@@ -93,7 +91,7 @@ const crearOperacion = () => {
 }
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
 const comprobarSaldo = () => {
-  if (saldoCajaAhorro <= 0) {
+  if (actualizarSaldoCajaAhorro() <= 0) {
     Swal.fire({
       icon: "warning",
       title: "Saldo Insuficiente",
