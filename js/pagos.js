@@ -134,7 +134,9 @@ const confirmarOperacion = (a, b) => {
         crearOperacion();
         cargarOperacion();
         enviarDatos();
-        window.location.href = "../opcion/opcion.html";
+        setTimeout(function(){
+          window.location.href = "../opcion/opcion.html";
+        }, 1000);
       });
     } else if (result.isDismissed) {
       Swal.fire("Operación Cancelada", "", "error").then(function () {
