@@ -117,11 +117,11 @@ function modificarOpcion() {
   //Codigo que cambia texto del html
   let opcionModificada = document.getElementById("opcion-modificada");
   opcionModificada.innerHTML =
-    "<p>Si</p> <a href='../cajero/cajero.html'> <div class='btn-derecha' id='btn-saldo'></div></a></li>";
+    "<p>Si -- &gt;&gt</p> <a href='../cajero/cajero.html'> <div class='btn-derecha' id='btn-saldo'></div></a></li>";
   //Codigo que cambia texto del html
   let opcionModificadaDos = document.getElementById("opcion-modificada-dos");
   opcionModificadaDos.innerHTML =
-    '<p>No</p> <a href="../salir/salir.html" class="link"> <div class="btn-derecha"></div></a>';
+    '<p>No -- &gt;&gt</p> <a href="../salir/salir.html" class="link"> <div class="btn-derecha"></div></a>';
 }
 //Funcion que modifica el HTML al momento de devolver la operacion solicitada por el usuario
 function desactivarBtn(){
