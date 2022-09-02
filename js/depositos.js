@@ -2,32 +2,34 @@
 const captura = document.getElementById("depositos-submit");
 //Codigo que captura el boton que modifica la operacion
 const clean = document.getElementById("limpiar-campo");
-//Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinerao que desea depsositar
+//Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinero que desea depsositar
 let inputDepositos = document.getElementById("depositos-input");
-//Funcion que captura la informacion brindada por el usuario y la convierte en un objeto
+//Funcion que captura la informacion brindada por el usuario y confirma la operacion
 captura.onclick = () => {
-  // Constructor del objeto depositos;
-  class Operacion {
-    constructor(fecha, hora, operacion, monto, saldo) {
-      this.fecha = fecha;
-      this.hora = hora;
-      this.operacion = operacion;
-      this.monto = monto;
-      this.saldo = saldo;
-    }
+  //Llamada a las funciones declaradas
+  confirmarOperacion();
+};
+// Constructor del objeto depositos;
+class Operacion {
+  constructor(fecha, hora, operacion, monto, saldo) {
+    this.fecha = fecha;
+    this.hora = hora;
+    this.operacion = operacion;
+    this.monto = monto;
+    this.saldo = saldo;
   }
-  //Codigo que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
+}
+//Funcion que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
+const crearOperacion = () => {
   nuevaOperacion = new Operacion(
     capturarDiaDeposito(),
     capturarHoraDeposito(),
     nombrarOperacion(),
-    numeroADinero(),
+    numeroADinero(depositar()),
     convertirSaldoADinero()
   );
-  //Llamada a las funciones declaradas
-  confirmarOperacion();
-  actualizarSaldoStorage();
-};
+  return nuevaOperacion;
+}
 //Funcion que captura la fecha en que se realiza la operación
 const capturarDiaDeposito = () => new Date().toLocaleDateString();
 //Funcion que captura la hora en que se realiza la operacion
@@ -50,32 +52,51 @@ const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
     title: `Desea depositar la suma de ${numeroADinero(depositar())} ?`,
-    confirmButtonText: 'Save',
+    confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
     showCancelButton: true,
     cancelButtonText: "Cancelar",
     showClass: {
       popup: "animate__animated animate__fadeIn",
-    }
+    },
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       Swal.fire(
-        'Operación realizada con exito. Su saldo es ' + convertirSaldoADinero(), '', 'success'
+        "Operación realizada con exito. Su saldo es " + convertirSaldoADinero(),
+        "",
+        "success"
       ).then(function () {
+        crearOperacion();
+        cargarOperacion();
+        actualizarSaldoStorage();
+        enviarDatos();
         window.location.href = "../opcion/opcion.html";
-      })
+      });
     } else if (result.isDismissed) {
-      Swal.fire(
-        'Operación cancelada', '', 'info'
-      ).then(function () {
+      Swal.fire("Operación cancelada", "", "info").then(function () {
         window.location.href = "../opcion/opcion.html";
-      })
+      });
     }
+  });
+};
+//Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor
+const cargarOperacion = () => {
+  depositoRealizado = crearOperacion();
+};
+//Funcion que envia la informacion generada por el usuario al servidor y la almacena en el localstorage
+const enviarDatos = () => {
+  const jsonplaceholder = "https://jsonplaceholder.typicode.com/posts";
+  fetch(jsonplaceholder, {
+    method: "POST",
+    body: JSON.stringify(depositoRealizado),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
   })
-}
-// Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a depositar
-clean.onclick = () => {
-  inputDepositos.value = "";
+    .then((respuesta) => respuesta.json())
+    .then((datos) => {
+      console.log(datos);
+      localStorage.setItem("depositoRealizado", JSON.stringify(datos));
+    });
 };
