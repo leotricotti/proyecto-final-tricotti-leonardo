@@ -25,7 +25,7 @@ function mostarSaldo() {
   let tableBody = document.createElement("tbody");
   tableBody.className = "table-group-divider";
   //Codigo que recorre el array de cuentas creado anteriormente y asigna cada elemento a su columna
-  for (const cuenta of cuentasLocalStorage){
+  for (const cuenta of cuentasLocalStorage) {
     tableBody.innerHTML += `
         <tr>
           <td>${cuenta.tipo}</td>
@@ -43,26 +43,30 @@ function mostarSaldo() {
   let tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 }
-//Funcion que captura la informacion de las cuentas simuladas y lo inserta en el local storage 
-function capturarOperaciones(){fetch("../../json/operaciones.json")
-  .then((resp) => resp.json())
-  .then((data) => {
-    let operaciones = data;
-    guardarLocal("operaciones", JSON.stringify(operaciones));
-})}
+//Funcion que captura la informacion de las cuentas simuladas y lo inserta en el local storage
+function capturarOperaciones() {
+  fetch("../../json/operaciones.json")
+    .then((resp) => resp.json())
+    .then((data) => {
+      let operaciones = data;
+      guardarLocal("operaciones", JSON.stringify(operaciones));
+    });
+}
 //Llamada a la funcion
 capturarOperaciones();
 //Funcion que al consultar los movimientos devuelve una tabla con los movimientos de las cuentas bancarias simuladas
 function mostarMovimientos() {
   //Codigo que recupera los movimientos simulados almacenados en el local storage
-  const movimientosLocalStorage = JSON.parse(localStorage.getItem("operaciones"));
+  const movimientosLocalStorage = JSON.parse(
+    localStorage.getItem("operaciones")
+  );
   //Codigo para cambiar el subtitulo del simulador
   let text = document.querySelector(".text");
   text.innerText = "Ultimos Movimientos";
   //Código que crea el elemento tabla y le asigna sus clases
   let table = document.createElement("table");
   table.className = "table table-hover";
-  //Código que crea la cabeza de la tabla 
+  //Código que crea la cabeza de la tabla
   let tableHead = document.createElement("thead");
   tableHead.innerHTML = `
     <thead>
@@ -124,11 +128,11 @@ function modificarOpcion() {
     '<p>No -- &gt;&gt</p> <a href="../salir/salir.html" class="link"> <div class="btn-derecha"></div></a>';
 }
 //Funcion que modifica el HTML al momento de devolver la operacion solicitada por el usuario
-function desactivarBtn(){
+function desactivarBtn() {
   //Codigo desactiva un boton del html
   let btnDesactivado = document.getElementById("tecla-disable");
-  btnDesactivado.innerHTML = 
-  '<a href="#" class="link link-disable"> <div class="btn-izquierda btn-disable" id="btn-movimientos"></div></a>'
+  btnDesactivado.innerHTML =
+    '<a href="#" class="link link-disable"> <div class="btn-izquierda btn-disable" id="btn-movimientos"></div></a>';
 }
 //Evento que recibe informacion del mouse provista por el usuario y ejecuta un afuncion que devuelve el saldo disponible simulado y modifica el html
 let btnSaldo = document.getElementById("btn-saldo");
