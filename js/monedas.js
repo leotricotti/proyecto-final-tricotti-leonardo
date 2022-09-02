@@ -1,19 +1,7 @@
-//Array que almacena las operaciones realizadas con dolares
-const operacionesDolar = [];
 //Funcion que carga la funcion que inyecta la tabla con la cotizacion del dolar en tiempo real
 window.onload = () => {
   obtenerValorDolar();
-}
-// Constructor del objeto operaciones
-class Operacion {
-  constructor(fecha, hora, operacion, monto, saldo) {
-    this.fecha = fecha;
-    this.hora = hora;
-    this.operacion = operacion;
-    this.monto = monto;
-    this.saldo = saldo;
-  }
-}
+};
 //Variables necesarias para operar
 let valorDolarCompra;
 let valorDolarVenta;
@@ -42,7 +30,12 @@ const numeroADolar = (dinero) => {
     currency: "USD",
     currencyDisplay: "name",
   }).format(dinero));
-}
+};
+//Codigo que actualiza el saldo de la caja de ahorro simulada
+const actualizarSaldoCajaAhorro = () => {
+  saldoCajaAhorro = convertirStorageANumero() - comprarDolares();
+  return saldoCajaAhorro;
+};
 //Funcion que inyecta la tabla con la cotizacion del dolar en tiempo real
 const mostrarCotizacion = () => {
   //Código que crea el elemento tabla y le asigna sus clases
@@ -83,8 +76,8 @@ const mostrarCotizacion = () => {
 };
 //Funcion que obtiene el valor del dolar blue en tiempo real
 async function obtenerValorDolar() {
-  const URLDOLAR = "https://api-dolar-argentina.herokuapp.com/api/dolarblue";
-  const resp = await fetch(URLDOLAR);
+  const dolar = "https://api-dolar-argentina.herokuapp.com/api/dolarblue";
+  const resp = await fetch(dolar);
   const data = await resp.json();
   valorDolarCompra = data.compra;
   valorDolarVenta = data.venta;
@@ -95,76 +88,124 @@ async function obtenerValorDolar() {
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
-    title: `Desea adquirir ${numeroADolar(cantidadDolares.value)} a ${numeroADinero(comprarDolares())} ?`,
-    confirmButtonText: 'Save',
+    title: `Desea adquirir ${numeroADolar(
+      cantidadDolares.value
+    )} a ${numeroADinero(comprarDolares())} ?`,
+    confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
     showCancelButton: true,
     cancelButtonText: "Cancelar",
     showClass: {
       popup: "animate__animated animate__fadeIn",
-    }
+    },
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire(
-        'Operación realizada con exito. Su saldo es ' + convertirSaldoADinero(), '', 'success'
+        "Operación realizada con exito. Su saldo es " + convertirSaldoADinero(),
+        "",
+        "success"
       ).then(function () {
-        window.location.href = "../opcion/opcion.html";
         //Llamada a las funciones
-        actualizarSaldoStorage(); 
-        crearOperacion();
+        actualizarSaldoStorage();
         cargarOperacion();
-        console.log(operacionesDolar);
-      })
+        crearOperacion();
+        enviarDatos();
+        setTimeout(function () {
+          window.location.href = "../opcion/opcion.html";
+        }, 1000);
+      });
     } else if (result.isDismissed) {
-      Swal.fire(
-        'Operación cancelada', '', 'info'
-      ).then(function () {
+      Swal.fire("Operación cancelada", "", "info").then(function () {
         window.location.href = "../opcion/opcion.html";
-      })
+      });
     }
-  })
-}
-//Funcion que comprueba si el usuario compra la cantidad permitida de dolares mensuales y opera en consecuencia
-dolaresComprados.onclick = () => {
-  if ((cantidadDolares.value > 0) && (cantidadDolares.value < 200)){
-    confirmarOperacion();
-  } else {
-  //Codigo que devuelve un alert si la opcion ingresada es invalida
+  });
+};
+//Funcion que confirma que el usuario tenga fondos suficientes y no exceda el limite de compra por operacion
+const comprobarCompra = () => {
+  if (actualizarSaldoCajaAhorro() <= 0) {
     Swal.fire({
       icon: "warning",
-      title: "Ingrese una opción valida",
+      title: "Saldo Insuficiente",
       confirmButtonColor: "#3085d6",
       confirmButtonText: "Aceptar",
       showClass: {
         popup: "animate__animated animate__fadeIn",
       },
+    }).then(() => {
+      Swal.fire("Operación Cancelada", "", "error").then(function () {
+        window.location.href = "../opcion/opcion.html";
+      });
     });
+  } else if ((cantidadDolares.value <= 0) || (cantidadDolares.value > 200)) {
+    Swal.fire({
+      icon: "warning",
+      title: "Verifique la cantidad ingresada",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Aceptar",
+      showClass: {
+        popup: "animate__animated animate__fadeIn",
+      },
+    }).then(function () {
+      cantidadDolares.value = "";
+    });
+  }else{
+    confirmarOperacion();
+  }
+};
+//Funcion que llama a las funciones que validan la operacion
+dolaresComprados.onclick = () => {
+  comprobarCompra();
+};
+// Constructor del objeto operaciones
+class Operacion {
+  constructor(fecha, hora, operacion, monto, saldo) {
+    this.fecha = fecha;
+    this.hora = hora;
+    this.operacion = operacion;
+    this.monto = monto;
+    this.saldo = saldo;
   }
 }
-//Codigo que informa el tipo de operacion
-const nombrarOperacion = () => "Compra dolares";
-//Codigo que convierte a pesos el saldo simulado
-const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
 //Funcion que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
 const crearOperacion = () => {
   nuevaOperacion = new Operacion(
     capturarDia(),
     capturarHora(),
     nombrarOperacion(),
-    numeroADinero(comprarDolares()),
+    numeroADolar(cantidadDolares.value),
     convertirSaldoADinero()
   );
   return nuevaOperacion;
-}
-//Codigo que crea la variable donde se almacenaran las operaciones simuladas
-let operacionesDolarStorage = (localStorage.getItem("operacionesDolar"));
-//Operador avanzado que verifica si existe en el localstorage el objeto operaciones dolar, si no es así lo crea
-operacionesDolarStorage == null && localStorage.setItem("operacionesDolar", operacionesDolar);
-//Funcion que almacena las nuevas operaciones en el localstorage
+};
+//Funcion que captura la fecha en que se realiza la operación
+const capturarDia = () => new Date().toLocaleDateString();
+//Funcion que captura la hora en que se realiza la operacion
+const capturarHora = () => new Date().toLocaleTimeString();
+//Codigo que informa el tipo de operacion
+const nombrarOperacion = () => "Compra dolares";
+//Codigo que convierte a pesos el saldo simulado
+const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
+let comprarDolar;
+//Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor
 const cargarOperacion = () => {
-  operacionesDolar.unshift(crearOperacion());
-  guardarLocal("operacionesDolar", JSON.stringify(operacionesDolar));
-}
+  comprarDolar = crearOperacion();
+};
+//Funcion que envia la informacion generada por el usuario al servidor y la almacena en el localstorage
+const enviarDatos = () => {
+  const jsonplaceholder = "https://jsonplaceholder.typicode.com/posts";
+  fetch(jsonplaceholder, {
+    method: "POST",
+    body: JSON.stringify(comprarDolar),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  })
+    .then((respuesta) => respuesta.json())
+    .then((datos) => {
+      console.log(datos);
+      localStorage.setItem("comprarDolar", JSON.stringify(datos));
+    });
+};
 
-actualizarSaldoCajaAhorro = () => saldoOperable - comprarDolares();
