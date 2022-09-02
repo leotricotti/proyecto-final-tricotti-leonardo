@@ -71,7 +71,9 @@ const confirmarOperacion = () => {
         cargarOperacion();
         actualizarSaldoStorage();
         enviarDatos();
-        window.location.href = "../opcion/opcion.html";
+        setTimeout(function(){
+          window.location.href = "../opcion/opcion.html";
+        }, 1000);
       });
     } else if (result.isDismissed) {
       Swal.fire("Operación cancelada", "", "info").then(function () {
