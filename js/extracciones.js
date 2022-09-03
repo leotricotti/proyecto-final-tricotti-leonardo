@@ -28,6 +28,27 @@ captura.onclick = () => {
   //Llamada a las funciones declaradas
   comprobarSaldo();
 };
+// Constructor del objeto depositos;
+class Operacion {
+  constructor(fecha, hora, operacion, monto, saldo) {
+    this.fecha = fecha;
+    this.hora = hora;
+    this.operacion = operacion;
+    this.monto = monto;
+    this.saldo = saldo;
+  }
+}
+//Codigo que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
+const crearOperacion = () => {
+  nuevaOperacion = new  Operacion (
+    capturarDiaExtraccion(),
+    capturarHoraExtraccion(),
+    nombrarOperacion(),
+    numeroAPesos(),
+    convertirSaldoADinero()
+  );
+  return nuevaOperacion;
+}
 // Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a extraer
 clean.onclick = () => {
   inputExtraccion.value = "";
@@ -68,27 +89,6 @@ const confirmarOperacion = () => {
     }
   });
 };
-// Constructor del objeto depositos;
-class Operacion {
-  constructor(fecha, hora, operacion, monto, saldo) {
-    this.fecha = fecha;
-    this.hora = hora;
-    this.operacion = operacion;
-    this.monto = monto;
-    this.saldo = saldo;
-  }
-}
-//Codigo que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
-const crearOperacion = () => {
-  nuevaOperacion = new  Operacion (
-    capturarDiaExtraccion(),
-    capturarHoraExtraccion(),
-    nombrarOperacion(),
-    numeroAPesos(),
-    convertirSaldoADinero()
-  );
-  return nuevaOperacion;
-}
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
 const comprobarSaldo = () => {
   if (actualizarSaldoCajaAhorro() <= 0) {
