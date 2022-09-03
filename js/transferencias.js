@@ -1,50 +1,5 @@
-//Array que contiene las cuentas habilitadas para recibir transferencias
-const cuentasHabilitadas = [];
-//Funcion que carga las cuentas habilitadas para recibir transferencias
-const cargarCuentasHabilitadas = (arr) => {
-  arr.push({
-    id: "01",
-    titular: "Gómez, Sandra",
-    tipo: "Caja de Ahorro",
-    moneda: "$",
-    cuenta: "4069-5689756/5",
-    entidad: "Banco Galicia",
-  });
-  arr.push({
-    id: "02",
-    titular: "Suarez, Analía",
-    tipo: "Cuenta Corriente",
-    moneda: "$",
-    cuenta: "5879-789700/4",
-    entidad: "Banco Hipotecario",
-  });
-  arr.push({
-    id: "03",
-    titular: "Castro, Cintia",
-    tipo: "Cuenta Corriente",
-    moneda: "$",
-    cuenta: "4565-991626/8",
-    entidad: "Banco Provincia",
-  });
-  arr.push({
-    id: "04",
-    titular: "Alonso, Juan",
-    tipo: "Caja de Ahorro",
-    moneda: "$",
-    cuenta: "2356-123055/5",
-    entidad: "Banco Santander",
-  });
-  arr.push({
-    id: "05",
-    titular: "Villareal, Susana",
-    tipo: "Cuenta Corriente",
-    moneda: "$",
-    cuenta: "4566-978600/4",
-    entidad: "Banco Galicia",
-  });
-};
-//Llamada a la funcion que carga las cuentas en el array de cuentas habilitadas
-cargarCuentasHabilitadas(cuentasHabilitadas);
+//Codigo que recupera la informacion de las cuentas simuladas del local storage
+const cuentasHabilitadasLocalStorage = JSON.parse(localStorage.getItem("cuentasHabilitadas"));
 //Funcion que inyecta la tabla cuentas habilitadas a recibir transferencias en el html
 function mostrarCuentas(...array) {
   //Código que crea el elemento tabla y le asigna sus clases
@@ -89,13 +44,14 @@ function mostrarCuentas(...array) {
   tableContainer.append(table);
 }
 //Llamada a la funcion que inyecta al html la tabla con las cuentas habilitadas
-mostrarCuentas(...cuentasHabilitadas);
+mostrarCuentas(...cuentasHabilitadasLocalStorage);
 //Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinero que desea transferir
 let inputTransferencia = document.getElementById("transferencia-input");
 //Codigo que captura el boton que confirma la operacion
 let capturarValor = document.getElementById("transferencia-submit");
 //Operador que desestructura el array de objetos
-const [a, b, c, d, e] = cuentasHabilitadas;
+const [a, b, c, d, e] = cuentasHabilitadasLocalStorage;
+const toTop = () => window.scrollTo({top : 0});
 //Funcion que captura la cuenta seleccionada 
 const seleccionarCuenta = (inputValue) => {
   if (inputValue == "01") {
@@ -133,18 +89,20 @@ const seleccionarCuenta = (inputValue) => {
       showClass: {
         popup: "animate__animated animate__fadeIn",
       },
+    }).then(() => {
+      //Codigo que limpia el campo cuando se ingresa una opcion invalida
+      inputTransferencia.value = "";
     });
-  }
+  }  
 };
 //Codigo que captura el boton modificar
-const opcionModificada = document.getElementById("limpiar-campo");
+const limpiarCampo = document.getElementById("limpiar-campo");
 // Funcion que limpia el campo input si el usuario así lo requiere
-opcionModificada.onclick = () => {
+limpiarCampo.onclick = () => {
   inputTransferencia.value = "";
 };
 //Funcion que alterna las llamadas a las funciones sobre el mismo boton html
 capturarValor.addEventListener("click", function () {
   seleccionarCuenta(inputTransferencia.value);
 });
-
 
