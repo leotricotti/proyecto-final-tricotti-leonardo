@@ -1,0 +1,42 @@
+[
+  {
+    "id": "01",
+    "titular": "Gómez, Sandra",
+    "tipo": "Caja de Ahorro",
+    "moneda": "$",
+    "cuenta": "4069-5689756/5",
+    "entidad": "Banco Galicia"
+  },
+  {
+    "id": "02",
+    "titular": "Suarez, Analía",
+    "tipo": "Cuenta Corriente",
+    "moneda": "$",
+    "cuenta": "5879-789700/4",
+    "entidad": "Banco Hipotecario"
+  },
+  {
+    "id": "03",
+    "titular": "Castro, Cintia",
+    "tipo": "Cuenta Corriente",
+    "moneda": "$",
+    "cuenta": "4565-991626/8",
+    "entidad": "Banco Provincia"
+  },
+  {
+    "id": "04",
+    "titular": "Alonso, Juan",
+    "tipo": "Caja de Ahorro",
+    "moneda": "$",
+    "cuenta": "2356-123055/5",
+    "entidad": "Banco Santander"
+  },
+  {
+    "id": "05",
+    "titular": "Villareal, Susana",
+    "tipo": "Cuenta Corriente",
+    "moneda": "$",
+    "cuenta": "4566-978600/4",
+    "entidad": "Banco Galicia"
+  }
+]
