@@ -1,30 +1,40 @@
-// const options = {
-// 	method: 'GET',
-// 	headers: {
-// 		'X-RapidAPI-Key': '0fc78676efmsh63b6bb59f51558fp1d14fbjsn748e1845fb4f',
-// 		'X-RapidAPI-Host': 'google-finance4.p.rapidapi.com'
-// 	}
-// };
-
-// fetch('https://google-finance4.p.rapidapi.com/search/?q=nasdaq&hl=en&gl=US', options)
-// 	.then(response => response.json())
-// 	.then(response => console.log(response[1].price.previous_close))
-// 	.catch(err => console.error(err));
-
-// const options = {
-// 	method: 'GET',
-// 	headers: {
-// 		'X-RapidAPI-Key': '0fc78676efmsh63b6bb59f51558fp1d14fbjsn748e1845fb4f',
-// 		'X-RapidAPI-Host': 'google-finance4.p.rapidapi.com'
-// 	}
-// };
-
-// fetch('https://google-finance4.p.rapidapi.com/search/?q=ftse&hl=en&gl=US', options)
-// 	.then(response => response.json())
-// 	.then(response => console.log(response))
-// 	.catch(err => console.error(err));
-
 //Funcion que captura datos del servidor
+async function getDatosNasdaq() {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": "0fc78676efmsh63b6bb59f51558fp1d14fbjsn748e1845fb4f",
+      "X-RapidAPI-Host": "google-finance4.p.rapidapi.com",
+    },
+  };
+
+  let espera = await fetch(
+    "https://google-finance4.p.rapidapi.com/search/?q=nasdaq&hl=en&gl=US",
+    options
+  )
+    .then((response) => response.json())
+    .then((response) => inyectarTabla(response));
+  espera = cambiarSubtitulo("Cotizacion Indice Nasdaq");
+}
+//Funcion que captura datos del servidor
+async function getDatosFtse() {
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": "0fc78676efmsh63b6bb59f51558fp1d14fbjsn748e1845fb4f",
+      "X-RapidAPI-Host": "google-finance4.p.rapidapi.com",
+    },
+  };
+
+  let espera = await fetch(
+    "https://google-finance4.p.rapidapi.com/search/?q=ftse&hl=en&gl=US",
+    options
+  )
+    .then((response) => response.json())
+    .then((response) => inyectarTabla(response));
+  espera = cambiarSubtitulo("Cotizacion Indice Ftse");
+}
+//Funcion que solicita datos al servidor
 async function getDatosNikkei() {
   const options = {
     method: "GET",
@@ -33,19 +43,16 @@ async function getDatosNikkei() {
       "X-RapidAPI-Host": "google-finance4.p.rapidapi.com",
     },
   };
-  fetch(
+  let espera = await fetch(
     "https://google-finance4.p.rapidapi.com/search/?q=nikkei&hl=en&gl=US",
     options
   )
     .then((response) => response.json())
-    .then((response) => llamarApi(response))
-    .catch((err) => console.error(err));
-};
-
-const llamarApi = (respuesta) => {
-  //Codigo que cambia el subtitulo del simulador
-  let text = document.querySelector(".text");
-  text.innerText = "Indice NIKKEI";
+    .then((response) => inyectarTabla(response));
+  espera = cambiarSubtitulo("Cotizacion Indice Nikkei");
+}
+//Funcion que crea e inyecta la tabla con la informacion provista por la API
+const inyectarTabla = (respuesta) => {
   //Código que crea el elemento tabla y le asigna sus clases
   let table = document.createElement("table");
   table.className = "table table-hover";
@@ -84,34 +91,60 @@ const llamarApi = (respuesta) => {
   let tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 };
-//Codigo que captura el boton nikkei
-const btnFtse = document.getElementById("nikkei");
+//Funcion que cambia el subtitulo del simulador
+const cambiarSubtitulo = (texto) => {
+  let text = document.querySelector(".text");
+  text.innerText = texto;
+};
+//Funcion que da formato de dinero al dato recibido
+function formatearPrecio(precio) {
+  if (precio == null) {
+    precio = "S/C";
+  } else {
+    precio = numeroADinero(precio);
+  }
+  return precio;
+}
+//Funcion ajusta la cantidad de decimales recibidos de la api
+const quitarDecimales = (num) => {
+  if (num == 0) {
+    num = "S/C";
+  } else {
+    num = parseFloat(num).toFixed(2);
+  }
+  return num;
+};
+//Funcion que limpia la tabla y evita que se repita la misma
+const clearTable = () => {
+  const table = document.querySelector(".table-container");
+  table.innerHTML = "";
+};
+//Funcion que limpia el texo
+const clearText = () => {
+  const text = document.querySelector(".text");
+  text.innerHTML = "";
+};
+//Codigo que captura el boton Nasdaq
+const btnNasdaq = document.getElementById("nasdaq");
 //Funcion que mustra la informacion requerida por el usuario
-btnNikkei.onclick = () => {
-  getDatosNikkei();
+btnNasdaq.onclick = () => {
+  clearTable();
+  clearText();
+  getDatosNasdaq();
+};
+//Codigo que captura el boton FTSE
+const btnFtse = document.getElementById("ftse");
+//Funcion que mustra la informacion requerida por el usuario
+btnFtse.onclick = () => {
+  clearTable();
+  clearText();
+  getDatosFtse();
 };
 //Codigo que captura el boton nikkei
 const btnNikkei = document.getElementById("nikkei");
 //Funcion que mustra la informacion requerida por el usuario
 btnNikkei.onclick = () => {
+  clearTable();
+  clearText();
   getDatosNikkei();
 };
-//Funcion que da formato de dinero al dato recibido
-function formatearPrecio(precio){
-  if(precio == null){
-    precio = "S/C";
-  }else{
-    precio = numeroADinero(precio);
-  }
-  return precio;
-}; 
-//Funcion ajusta la cantidad de decimales recibidos de la api
-const quitarDecimales = (num) => {
-  if(num == 0){
-    num = "S/C";
-  }else{
-    num = parseFloat(num).toFixed(2);
-  }
-  return num;
-}
-  
