@@ -50,6 +50,17 @@ function jsonToStorageOperaciones() {
 }
 //Llamada a la funcion
 jsonToStorageOperaciones();
+//Funcion que captura la informacion de las operaciones simuladas del local json y la copia en el localstorage
+function jsonToStorageCuentasHabilitadas() {
+  fetch("../../json/cuentasHabilitadas.json")
+    .then((resp) => resp.json())
+    .then((data) => {
+      cuentasHabilitadas = data;
+      guardarLocal("cuentasHabilitadas", JSON.stringify(cuentasHabilitadas));
+    });
+}
+//Llamada a la funcion
+jsonToStorageCuentasHabilitadas();
 //Creacion del array que va a contener las cuentas simuladas
 const cuentas = [];
 //Funcion que carga los objetos literales que contienen la informacion de las cuentas bancarias simuladas al array de cuentas
