@@ -1,10 +1,8 @@
-//Declaracion de variable que va a almacenar los servicios por vencer que provienen del json
-let serviciosLocalStorage;
-//Codigo que recupera los servicios a pagar almacenados en el localstorage
-serviciosLocalStorage = JSON.parse(localStorage.getItem("servicios"));
+//Variable que almacena los servicios por vencer provenientes del localstorage
+let serviciosLocalStorage = JSON.parse(localStorage.getItem("servicios"));
 //Funcion que inyecta la tabla con la informacion de los servicios por vencer
 const mostrarServicios = (servicios) => {
-  //Código que crea el elemento tabla y le asigna clases de bootstrap
+  //Código que crea el elemento tabla y asigna sus clases
   let table = document.createElement("table");
   table.className = "table table-hover";
   //Código que crea la cabeza de la tabla
@@ -36,19 +34,15 @@ const mostrarServicios = (servicios) => {
   //Codigo que agrega la cabeza y el cuerpo a la tabla creada anteriormente
   table.append(tableHead);
   table.append(tableBody);
-  //Codigo que asigna a un padre la tabla creada anteriormente
+  //Codigo que asigna un padre a la tabla creada anteriormente
   tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 };
 //Llamada a la funcion que inyecta al html la tabla con las cuentas habilitadas
 mostrarServicios(serviciosLocalStorage);
-//Codigo que captura el campo input
-let pagosInput = document.getElementById("pagos-input");
-//Codigo que captura el boton que confirma la operacion
-let capturarValor = document.getElementById("pagos-submit");
 //Operador que desestructura el array de objetos
 const [a, b, c, d, e] = serviciosLocalStorage;
-//Funcion que captura la cuenta seleccionada y devuelve un campo para ingresar el importe que se desea transferir
+//Funcion que captura el servicios que se desea pagar y confirma por alert
 const seleccionarServicio = (inputValue) => {
   if (inputValue == "01") {
     //Codigo que quita la tabla con las cuentas habilitadas
@@ -57,7 +51,7 @@ const seleccionarServicio = (inputValue) => {
     saldoCajaAhorro -= a.numero;
     //Llamada a la funcion
     comprobarSaldo(a.servicio, a.numero);
-    //Funcion que retorna el monto abonado como componente del objeto operacion
+    //Variable que retorna el monto abonado para formar parte del objeto opeacion que se envia al servidor
     monto = a.numero;
   } else if (inputValue == "02") {
     //Codigo que quita la tabla con las cuentas habilitadas
@@ -66,7 +60,7 @@ const seleccionarServicio = (inputValue) => {
     saldoCajaAhorro -= b.numero;
     //Llamada a la funcion
     comprobarSaldo(b.servicio, b.numero);
-    //Funcion que retorna el monto abonado como componente del objeto operacion
+    //Variable que retorna el monto abonado para formar parte del objeto opeacion que se envia al servidor
     monto = b.numero;
   } else if (inputValue == "03") {
     //Codigo que quita la tabla con las cuentas habilitadas
@@ -75,7 +69,7 @@ const seleccionarServicio = (inputValue) => {
     saldoCajaAhorro -= c.numero;
     //Llamada a la funcion
     comprobarSaldo(c.servicio, c.numero);
-    //Funcion que retorna el monto abonado como componente del objeto operacion
+    //Variable que retorna el monto abonado para formar parte del objeto opeacion que se envia al servidor
     monto = c.numero;
   } else if (inputValue == "04") {
     //Codigo que quita la tabla con las cuentas habilitadas
@@ -84,7 +78,7 @@ const seleccionarServicio = (inputValue) => {
     saldoCajaAhorro -= d.numero;
     //Llamada a la funcion
     comprobarSaldo(d.servicio, d.numero);
-    //Funcion que retorna el monto abonado como componente del objeto operacion
+    //Variable que retorna el monto abonado para formar parte del objeto opeacion que se envia al servidor
     monto = d.numero;
   } else if (inputValue == "05") {
     //Codigo que quita la tabla con las cuentas habilitadas
@@ -93,7 +87,7 @@ const seleccionarServicio = (inputValue) => {
     saldoCajaAhorro -= e.numero;
     //Llamada a la funcion
     comprobarSaldo(e.servicio, e.numero);
-    //Funcion que retorna el monto abonado como componente del objeto operacion
+    //Variable que retorna el monto abonado para formar parte del objeto opeacion que se envia al servidor
     monto = e.numero;
   } else {
     Swal.fire({
@@ -114,14 +108,13 @@ const confirmarOperacion = (servicio, monto) => {
     title: `Desea pagar el servicio ${servicio} por el importe de ${numeroADinero(
       monto
     )} ?`,
-    confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
     showCancelButton: true,
     cancelButtonText: "Cancelar",
     showClass: {
       popup: "animate__animated animate__fadeIn",
-    },
+    }
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire(
@@ -138,19 +131,32 @@ const confirmarOperacion = (servicio, monto) => {
         }, 1000);
       });
     } else if (result.isDismissed) {
-      Swal.fire("Operación Cancelada", "", "error").then(function () {
-        window.location.href = "../opcion/opcion.html";
+      Swal.fire({
+      icon: "error",  
+      title: "Operación Cancelada",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Aceptar",
+      showClass: {
+        popup: "animate__animated animate__fadeIn",
+      }
+      }).then(function () {
+        window.location.href = "../opcion/opcion.html"
       });
     }
   });
 };
+//Codigo que captura el campo input
+let pagosInput = document.getElementById("pagos-input");
+//Codigo que captura el boton que confirma la operacion
+let capturarValor = document.getElementById("pagos-submit");
 //Funcion que captura la seleccion realizada por el usuario
 capturarValor.addEventListener("click", function () {
+  //Llamada a la funcion que selecciona el servicio a pagar
   seleccionarServicio(pagosInput.value);
 });
-//Codigo que captura el boton que modifica la operacion
+//Codigo que captura el boton que limpia el campo input
 const clean = document.getElementById("limpiar-campo");
-// Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a depositar
+// Funcion que limpia el campo input
 clean.onclick = () => {
   pagosInput.value = "";
 };
@@ -166,15 +172,23 @@ const comprobarSaldo = (servicio, monto) => {
         popup: "animate__animated animate__fadeIn",
       },
     }).then(() => {
-      Swal.fire("Operación Cancelada", "", "error").then(function () {
-        window.location.href = "../opcion/opcion.html";
-      });
+      Swal.fire({
+        icon: "error",  
+        title: "Operación Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        }
+        }).then(function () {
+          window.location.href = "../opcion/opcion.html"
+        });
     });
   } else {
     confirmarOperacion(servicio, monto);
   }
 };
-// Constructor del objeto operaciones
+// Constructor del objeto operaciones que será enviado jsonplaceholder
 class Operacion {
   constructor(fecha, hora, operacion, monto, saldo) {
     this.fecha = fecha;
@@ -201,7 +215,7 @@ const crearOperacion = () => {
   );
   return nuevaOperacion;
 };
-//Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor
+//Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor jsonplaceholder
 const cargarOperacion = () => {
   serviciosPagados = crearOperacion();
 };
