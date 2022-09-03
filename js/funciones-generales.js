@@ -1,15 +1,9 @@
-/** Creacion y recuperacion de la informacion saldo localstorage **/
+/** Creacion y recuperacion de la informacion del simulado **/
 
 //Codigo que crea la variable donde se almacenará el saldo simulado
 let saldoCajaAhorro = localStorage.getItem("saldo");
 //Operador avanzado que verifica si existe el objeto saldo, si no es así lo crea
 saldoCajaAhorro == null && localStorage.setItem("saldo", 150000);
-//Variable que recupera el saldo de la caja de ahorro del local storage
-let saldoCajaOperable = localStorage.getItem("saldo");
-//Funcion que convierte el dato recuperado del localstorage a numero
-const convertirStorageANumero = () => parseFloat(saldoCajaOperable);
-//Variable que almacena el dato convertido a numero
-let saldoOperable = convertirStorageANumero();
 //Funcion que actualiza el saldo almacenado en el storage
 const actualizarSaldoStorage = () => {
   saldoCajaAhorro = actualizarSaldoCajaAhorro();
