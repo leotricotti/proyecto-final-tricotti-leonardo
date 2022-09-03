@@ -1,9 +1,9 @@
 //Declaracion de variable que va a almacenar los servicios por vencer que provienen del json
 let serviciosLocalStorage;
+//Codigo que recupera los servicios a pagar almacenados en el localstorage
+serviciosLocalStorage = JSON.parse(localStorage.getItem("servicios"));
 //Funcion que inyecta la tabla con la informacion de los servicios por vencer
-const mostrarServicios = () => {
-  //Codigo que recupera los servicios a pagar almacenados en el localstorage
-  serviciosLocalStorage = JSON.parse(localStorage.getItem("servicios"));
+const mostrarServicios = (servicios) => {
   //Código que crea el elemento tabla y le asigna clases de bootstrap
   let table = document.createElement("table");
   table.className = "table table-hover";
@@ -23,7 +23,7 @@ const mostrarServicios = () => {
   tableBody = document.createElement("tbody");
   tableBody.className = "table-group-divider";
   //Codigo que crea el cuerpo de la tabla
-  for (const servicio of serviciosLocalStorage) {
+  for (const servicio of servicios) {
     tableBody.innerHTML += `
         <tr>
             <td>${servicio.id}</td>
@@ -41,7 +41,7 @@ const mostrarServicios = () => {
   tableContainer.append(table);
 };
 //Llamada a la funcion que inyecta al html la tabla con las cuentas habilitadas
-mostrarServicios();
+mostrarServicios(serviciosLocalStorage);
 //Codigo que captura el campo input
 let pagosInput = document.getElementById("pagos-input");
 //Codigo que captura el boton que confirma la operacion
@@ -54,47 +54,47 @@ const seleccionarServicio = (inputValue) => {
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Variable que almacena el resultado de la operacion
-    actualizarSaldoCajaAhorro = () => saldoOperable - a.numero;
+    saldoCajaAhorro -= a.numero;
     //Llamada a la funcion
     comprobarSaldo(a.servicio, a.numero);
     //Funcion que retorna el monto abonado como componente del objeto operacion
-    cargarMonto = () => a.numero;
+    monto = a.numero;
   } else if (inputValue == "02") {
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Variable que almacena el resultado de la operacion
-    actualizarSaldoCajaAhorro = () => saldoOperable - b.numero;
+    saldoCajaAhorro -= b.numero;
     //Llamada a la funcion
     comprobarSaldo(b.servicio, b.numero);
     //Funcion que retorna el monto abonado como componente del objeto operacion
-    cargarMonto = () => b.numero;
+    monto = b.numero;
   } else if (inputValue == "03") {
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Variable que almacena el resultado de la operacion
-    actualizarSaldoCajaAhorro = () => saldoOperable - c.numero;
+    saldoCajaAhorro -= c.numero;
     //Llamada a la funcion
     comprobarSaldo(c.servicio, c.numero);
     //Funcion que retorna el monto abonado como componente del objeto operacion
-    cargarMonto = () => c.numero;
+    monto = c.numero;
   } else if (inputValue == "04") {
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Variable que almacena el resultado de la operacion
-    actualizarSaldoCajaAhorro = () => saldoOperable - d.numero;
+    saldoCajaAhorro -= d.numero;
     //Llamada a la funcion
     comprobarSaldo(d.servicio, d.numero);
     //Funcion que retorna el monto abonado como componente del objeto operacion
-    cargarMonto = () => d.numero;
+    monto = d.numero;
   } else if (inputValue == "05") {
     //Codigo que quita la tabla con las cuentas habilitadas
     tableContainer.innerHTML = "";
     //Variable que almacena el resultado de la operacion
-    actualizarSaldoCajaAhorro = () => saldoOperable - e.numero;
+    saldoCajaAhorro -= e.numero;
     //Llamada a la funcion
     comprobarSaldo(e.servicio, e.numero);
     //Funcion que retorna el monto abonado como componente del objeto operacion
-    cargarMonto = () => e.numero;
+    monto = e.numero;
   } else {
     Swal.fire({
       icon: "warning",
@@ -108,11 +108,11 @@ const seleccionarServicio = (inputValue) => {
   }
 };
 //Funcion que confirma la operacion via un alert
-const confirmarOperacion = (a, b) => {
+const confirmarOperacion = (servicio, monto) => {
   Swal.fire({
     icon: "question",
-    title: `Desea pagar el servicio ${a} por el importe de ${numeroADinero(
-      b
+    title: `Desea pagar el servicio ${servicio} por el importe de ${numeroADinero(
+      monto
     )} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
@@ -126,10 +126,9 @@ const confirmarOperacion = (a, b) => {
     if (result.isConfirmed) {
       Swal.fire(
         `Operación realizada con éxito. Su saldo es ${numeroADinero(
-          actualizarSaldoCajaAhorro()
+          saldoCajaAhorro
         )}`
       ).then(function () {
-        actualizarSaldoCajaAhorro();
         actualizarSaldoStorage();
         crearOperacion();
         cargarOperacion();
@@ -156,7 +155,7 @@ clean.onclick = () => {
   pagosInput.value = "";
 };
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
-const comprobarSaldo = (a, b) => {
+const comprobarSaldo = (servicio, monto) => {
   if (saldoCajaAhorro <= 0) {
     Swal.fire({
       icon: "warning",
@@ -172,7 +171,7 @@ const comprobarSaldo = (a, b) => {
       });
     });
   } else {
-    confirmarOperacion(a, b);
+    confirmarOperacion(servicio, monto);
   }
 };
 // Constructor del objeto operaciones
@@ -197,8 +196,8 @@ const crearOperacion = () => {
     capturarDia(),
     capturarHora(),
     nombrarOperacion(),
-    numeroADinero(cargarMonto()),
-    numeroADinero(actualizarSaldoCajaAhorro())
+    numeroADinero(monto),
+    numeroADinero(saldoCajaAhorro)
   );
   return nuevaOperacion;
 };
