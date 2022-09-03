@@ -117,11 +117,17 @@ const confirmarOperacion = (servicio, monto) => {
     }
   }).then((result) => {
     if (result.isConfirmed) {
-      Swal.fire(
-        `Operación realizada con éxito. Su saldo es ${numeroADinero(
+      Swal.fire({
+        icon: "success",  
+        title:  `Operación realizada con éxito. Su saldo es ${numeroADinero(
           saldoCajaAhorro
-        )}`
-      ).then(function () {
+        )}`,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        }
+      }).then(function () {
         actualizarSaldoStorage();
         crearOperacion();
         cargarOperacion();
