@@ -1,5 +1,3 @@
-//Codigo que captura el boton que confirma la operacion
-const captura = document.getElementById("extracciones-submit");
 //Codigo que captura el boton que modifica la operacion
 const clean = document.getElementById("limpiar-campo");
 //Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinerao que desea depsositar
@@ -10,24 +8,6 @@ const capturarDiaExtraccion = () => new Date().toLocaleDateString();
 const capturarHoraExtraccion = () => new Date().toLocaleTimeString();
 //Codigo que informa el tipo de operacion
 const nombrarOperacion = () => "Extraccion Adelanto";
-//Funcion que captura la informacion sobre la operacion provista por el usuario
-const extraerDinero = () => inputExtraccion.value;
-//Funcion que parsea el numero ingresado por el usuario
-const parsearDineroExtraido = () => parseInt(extraerDinero());
-//Codigo que actualiza el saldo de la caja de ahorro simulada
-const actualizarSaldoCajaAhorro = () => {
-  saldoCajaAhorro = convertirStorageANumero() - parsearDineroExtraido();
-  return saldoCajaAhorro;
-};
-//Funcion que convierte al formato de moneda local el dato parseado
-const numeroAPesos = () => numeroADinero(extraerDinero());
-//Codigo que convierte al formato de moneda local el saldo simulado
-const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
-//Funcion que captura la informacion brindada por el usuario y la convierte en un objeto
-captura.onclick = () => {
-  //Llamada a las funciones declaradas
-  comprobarSaldo();
-};
 // Constructor del objeto depositos;
 class Operacion {
   constructor(fecha, hora, operacion, monto, saldo) {
@@ -40,15 +20,15 @@ class Operacion {
 }
 //Codigo que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
 const crearOperacion = () => {
-  nuevaOperacion = new  Operacion (
+  nuevaOperacion = new Operacion(
     capturarDiaExtraccion(),
     capturarHoraExtraccion(),
     nombrarOperacion(),
-    numeroAPesos(),
-    convertirSaldoADinero()
+    numeroADinero(inputExtraccion.value),
+    numeroADinero(saldoCajaAhorro)
   );
   return nuevaOperacion;
-}
+};
 // Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a extraer
 clean.onclick = () => {
   inputExtraccion.value = "";
@@ -58,7 +38,7 @@ const text = document.querySelector(".text");
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
-    title: `Desea extraer la suma de ${numeroAPesos()} ?`,
+    title: `Desea extraer la suma de ${numeroADinero(inputExtraccion.value)} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
@@ -70,20 +50,28 @@ const confirmarOperacion = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire(
-        "Operación realizada con exito. Su saldo es " + convertirSaldoADinero(),
+        "Operación realizada con exito. Su saldo es " +
+          numeroADinero(saldoCajaAhorro),
         "",
         "success"
       ).then(function () {
-        actualizarSaldoCajaAhorro();
         actualizarSaldoStorage();
         cargarOperacion();
         enviarDatos();
-        setTimeout(function(){
+        setTimeout(function () {
           window.location.href = "../opcion/opcion.html";
         }, 1000);
       });
     } else if (result.isDismissed) {
-      Swal.fire("Operación cancelada", "", "info").then(function () {
+      Swal.fire({
+        icon: "error",
+        title: "Operación Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         window.location.href = "../opcion/opcion.html";
       });
     }
@@ -91,7 +79,11 @@ const confirmarOperacion = () => {
 };
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
 const comprobarSaldo = () => {
-  if (actualizarSaldoCajaAhorro() <= 0) {
+  //Funcion que actualiza el saldo si los fondos son suficientes
+  saldoCajaAhorro -= parseFloat(inputExtraccion.value);
+  if (saldoCajaAhorro <= 0) {
+    //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
+    saldoCajaAhorro = localStorage.getItem("saldo");
     Swal.fire({
       icon: "warning",
       title: "Saldo Insuficiente",
@@ -101,13 +93,29 @@ const comprobarSaldo = () => {
         popup: "animate__animated animate__fadeIn",
       },
     }).then(() => {
-      Swal.fire("Operación Cancelada", "", "error").then(function () {
+      Swal.fire({
+        icon: "error",
+        title: "Operación Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         window.location.href = "../opcion/opcion.html";
       });
     });
   } else {
+    //Llamada a la funcion
     confirmarOperacion();
   }
+};
+//Codigo que captura el boton que confirma la operacion
+const captura = document.getElementById("extracciones-submit");
+//Funcion que captura la informacion brindada por el usuario y la convierte en un objeto
+captura.onclick = () => {
+  //Llamada a las funciones declaradas
+  comprobarSaldo();
 };
 //Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor
 const cargarOperacion = () => {
