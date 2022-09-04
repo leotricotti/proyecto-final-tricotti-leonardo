@@ -78,7 +78,15 @@ const confirmarOperacion = () => {
     } else if (result.isDismissed) {
       //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
       saldoCajaAhorro = localStorage.getItem("saldo");
-      Swal.fire("Operación cancelada", "", "info").then(function () {
+      Swal.fire({
+        icon: "error",
+        title: "Operación Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         window.location.href = "../opcion/opcion.html";
       });
     }
