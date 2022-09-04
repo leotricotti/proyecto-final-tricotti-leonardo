@@ -26,7 +26,7 @@ const crearOperacion = () => {
     capturarHoraDeposito(),
     nombrarOperacion(),
     numeroADinero(depositar()),
-    convertirSaldoADinero()
+    numeroADinero(saldoCajaAhorro)
   );
   return nuevaOperacion;
 }
@@ -40,15 +40,9 @@ const nombrarOperacion = () => "Depósito";
 const depositar = () => inputDepositos.value;
 //Funcion que parsea el numero ingresado por el usuario
 const parsearDineroDepositado = () => parseInt(depositar());
-//Codigo que actualiza el saldo de la caja de ahorro simulada
-const actualizarSaldoCajaAhorro = () => {
-  saldoCajaAhorro = parsearDineroDepositado() + convertirStorageANumero();
-  return saldoCajaAhorro;
-};
-//Codigo que convierte a pesos el saldo simulado
-const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
 //Funcion que dispara un alert que confirma o cancela la operación
 const confirmarOperacion = () => {
+  saldoCajaAhorro += parsearDineroDepositado();
   Swal.fire({
     icon: "question",
     title: `Desea depositar la suma de ${numeroADinero(depositar())} ?`,
@@ -63,7 +57,7 @@ const confirmarOperacion = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire(
-        "Operación realizada con exito. Su saldo es " + convertirSaldoADinero(),
+        "Operación realizada con exito. Su saldo es " + numeroADinero(saldoCajaAhorro),
         "",
         "success"
       ).then(function () {
@@ -76,6 +70,8 @@ const confirmarOperacion = () => {
         }, 1000);
       });
     } else if (result.isDismissed) {
+      //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
+      saldoCajaAhorro = localStorage.getItem("saldo");
       Swal.fire("Operación cancelada", "", "info").then(function () {
         window.location.href = "../opcion/opcion.html";
       });
