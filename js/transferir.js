@@ -18,7 +18,7 @@ opcionModificada.onclick = () => (inputTransferencia.value = "");
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
-    title: `Desea transferir a ${cuentaSeleccionada} la suma de ${numeroAPesos(
+    title: `Desea transferir a ${cuentaSeleccionada} la suma de ${numeroADinero(
       inputTransferencia.value
     )} ?`,
     confirmButtonText: "Save",
@@ -32,13 +32,17 @@ const confirmarOperacion = () => {
   }).then((result) => {
     /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
-      Swal.fire(
-        "Operación realizada con exito. Su saldo es " +
-          numeroADinero(actualizarSaldoCajaAhorro()),
-        "",
-        "success"
-      ).then(function () {
-        actualizarSaldoCajaAhorro();
+      Swal.fire({
+        icon: "success",
+        title: `Operación realizada con exito. Su saldo es ${numeroADinero(
+          saldoCajaAhorro
+        )}`,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         actualizarSaldoStorage();
         cargarOperacion();
         enviarDatos();
@@ -48,15 +52,27 @@ const confirmarOperacion = () => {
         }, 1000);
       });
     } else if (result.isDismissed) {
-      Swal.fire("Operación cancelada", "", "info").then(function () {
+      Swal.fire({
+        icon: "error",
+        title: "Operación Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         window.location.href = "../opcion/opcion.html";
       });
     }
   });
 };
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
-const comprobarSaldo = (importe, confirmacion) => {
-  if (importe <= 0) {
+const comprobarSaldo = (valor) => {
+  //Funcion que actualiza el saldo si los fondos son suficientes
+  saldoCajaAhorro -= parseFloat(valor);
+  if (saldoCajaAhorro <= 0) {
+    //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
+    saldoCajaAhorro = localStorage.getItem("saldo");
     Swal.fire({
       icon: "warning",
       title: "Saldo Insuficiente",
@@ -66,19 +82,27 @@ const comprobarSaldo = (importe, confirmacion) => {
         popup: "animate__animated animate__fadeIn",
       },
     }).then(() => {
-      Swal.fire("Operación Cancelada", "", "error").then(function () {
+      Swal.fire({
+        icon: "error",
+        title: "Operación Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         window.location.href = "../opcion/opcion.html";
       });
     });
   } else {
-    confirmacion;
+    confirmarOperacion();
   }
 };
 //Codigo que establece un contador que permite armar el condicional
 let contadorClicks = 0;
 //Funcion que alterna las llamadas a las funciones sobre el mismo boton html
 capturarValor.addEventListener("click", function () {
-  comprobarSaldo(actualizarSaldoCajaAhorro(), confirmarOperacion());
+  comprobarSaldo(inputTransferencia.value);
 });
 const capturarDia = () => new Date().toLocaleDateString();
 //Funcion que captura la hora en que se realiza la operacion
@@ -89,15 +113,6 @@ const nombrarOperacion = () => "Transferencia";
 const transferirDinero = () => inputTransferencia.value;
 //Funcion que parsea el numero ingresado por el usuario
 const parsearDineroTransferido = () => parseFloat(transferirDinero());
-//Codigo que actualiza el saldo de la caja de ahorro simulada
-const actualizarSaldoCajaAhorro = () => {
-  saldoCajaAhorro = convertirStorageANumero() - parsearDineroTransferido();
-  return saldoCajaAhorro;
-};
-//Funcion que convierte al formato de moneda local el dato parseado
-const numeroAPesos = () => numeroADinero(transferirDinero());
-//Codigo que convierte al formato de moneda local el saldo simulado
-const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
 // Constructor del objeto depositos;
 class Operacion {
   constructor(fecha, hora, operacion, monto, saldo) {
@@ -110,15 +125,15 @@ class Operacion {
 }
 //Codigo que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
 const crearOperacion = () => {
-  nuevaOperacion = new  Operacion (
+  nuevaOperacion = new Operacion(
     capturarDia(),
     capturarHora(),
     nombrarOperacion(),
-    numeroAPesos(),
-    convertirSaldoADinero()
+    numeroADinero(inputTransferencia.value),
+    numeroADinero(saldoCajaAhorro)
   );
   return nuevaOperacion;
-}
+};
 //Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor
 const cargarOperacion = () => {
   dineroTransferido = crearOperacion();
