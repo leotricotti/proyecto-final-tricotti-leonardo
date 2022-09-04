@@ -19,8 +19,9 @@ clean.onclick = () => {
 //Funcion que calcula la compra de dolares
 const comprarDolares = () => {
   costoDolarComprado = (
-    parseFloat(cantidadDolares.value) * parseFloat(valorDolarVenta)).toFixed(2);
-    return costoDolarComprado;
+    parseFloat(cantidadDolares.value) * parseFloat(valorDolarVenta)
+  ).toFixed(2);
+  return costoDolarComprado;
 };
 //Funcion que coinvierte un numero al formato a dolar
 const numeroADolar = (dinero) => {
@@ -68,16 +69,16 @@ const mostrarCotizacion = () => {
   let tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 };
-const subtitulo = document.querySelector(".text-container")
+const subtitulo = document.querySelector(".text-container");
 //Funcion que obtiene el valor del dolar blue en tiempo real
 async function obtenerValorDolar() {
   const dolar = "https://api-dolar-argentina.herokuapp.com/api/dolarblue";
   const resp = await fetch(dolar);
   const data = await resp.json();
-  subtitulo.classList.remove("text-disable")
+  //Codigo que permite que los datos del servidor y el input carguen en simultaneo
+  subtitulo.classList.remove("text-disable");
   valorDolarCompra = data.compra;
   valorDolarVenta = data.venta;
-
   mostrarCotizacion();
   comprarDolares();
 }
@@ -85,7 +86,9 @@ async function obtenerValorDolar() {
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
-    title: `Desea adquirir ${numeroADolar(cantidadDolares.value)} a  ${numeroADinero(comprarDolares())} ?`,
+    title: `Desea adquirir ${numeroADolar(
+      cantidadDolares.value
+    )} a  ${numeroADinero(comprarDolares())} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
@@ -96,15 +99,17 @@ const confirmarOperacion = () => {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      Swal.fire({      
-      icon: "succes",
-      title: `Operación realizada con exito. Su saldo es ${numeroADinero(saldoCajaAhorro)}`,
-      confirmButtonColor: "#3085d6",
-      confirmButtonText: "Aceptar",
-      showClass: {
-        popup: "animate__animated animate__fadeIn",
-      },
-    }).then(function () {
+      Swal.fire({
+        icon: "success",
+        title: `Operación realizada con exito. Su saldo es ${numeroADinero(
+          saldoCajaAhorro
+        )}`,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         //Llamada a las funciones
         actualizarSaldoStorage();
         cargarOperacion();
@@ -149,7 +154,7 @@ const comprobarCompra = () => {
         window.location.href = "../opcion/opcion.html";
       });
     });
-  } else if ((cantidadDolares.value <= 0) || (cantidadDolares.value > 200)) {
+  } else if (cantidadDolares.value <= 0 || cantidadDolares.value > 200) {
     Swal.fire({
       icon: "warning",
       title: "Verifique la cantidad ingresada",
@@ -158,10 +163,20 @@ const comprobarCompra = () => {
       showClass: {
         popup: "animate__animated animate__fadeIn",
       },
-    }).then(function () {
-      cantidadDolares.value = "";
+    }).then(() => {
+      Swal.fire({
+        icon: "error",
+        title: "Operacion Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
+        cantidadDolares.value = "";
+      });
     });
-  }else{
+  } else {
     confirmarOperacion();
   }
 };
@@ -185,8 +200,8 @@ const crearOperacion = () => {
     capturarDia(),
     capturarHora(),
     nombrarOperacion(),
-    numeroADolar(cantidadDolares.value),
-    convertirSaldoADinero()
+    numeroADinero(comprarDolares()),
+    numeroADinero(saldoCajaAhorro)
   );
   return nuevaOperacion;
 };
@@ -196,10 +211,8 @@ const capturarDia = () => new Date().toLocaleDateString();
 const capturarHora = () => new Date().toLocaleTimeString();
 //Codigo que informa el tipo de operacion
 const nombrarOperacion = () => "Compra dolares";
-//Codigo que convierte a pesos el saldo simulado
-const convertirSaldoADinero = () => numeroADinero(actualizarSaldoCajaAhorro());
-let comprarDolar;
 //Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor
+let comprarDolar;
 const cargarOperacion = () => {
   comprarDolar = crearOperacion();
 };
