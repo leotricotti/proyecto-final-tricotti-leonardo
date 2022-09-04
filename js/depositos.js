@@ -29,7 +29,7 @@ const crearOperacion = () => {
     numeroADinero(saldoCajaAhorro)
   );
   return nuevaOperacion;
-}
+};
 //Funcion que captura la fecha en que se realiza la operación
 const capturarDiaDeposito = () => new Date().toLocaleDateString();
 //Funcion que captura la hora en que se realiza la operacion
@@ -56,16 +56,22 @@ const confirmarOperacion = () => {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      Swal.fire(
-        "Operación realizada con exito. Su saldo es " + numeroADinero(saldoCajaAhorro),
-        "",
-        "success"
-      ).then(function () {
+      Swal.fire({
+        icon: "success",
+        title: `Operación realizada con exito. Su saldo es ${numeroADinero(
+          saldoCajaAhorro
+        )}`,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         crearOperacion();
         cargarOperacion();
         actualizarSaldoStorage();
         enviarDatos();
-        setTimeout(function(){
+        setTimeout(function () {
           window.location.href = "../opcion/opcion.html";
         }, 1000);
       });
