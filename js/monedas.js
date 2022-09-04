@@ -120,7 +120,15 @@ const confirmarOperacion = () => {
         }, 1000);
       });
     } else if (result.isDismissed) {
-      Swal.fire("Operación cancelada", "", "info").then(function () {
+      Swal.fire({
+        icon: "error",
+        title: "Operación Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         window.location.href = "../opcion/opcion.html";
       });
     }
