@@ -19,9 +19,8 @@ clean.onclick = () => {
 //Funcion que calcula la compra de dolares
 const comprarDolares = () => {
   costoDolarComprado = (
-    parseFloat(cantidadDolares.value) * parseFloat(valorDolarVenta)
-  ).toFixed(2);
-  return costoDolarComprado;
+    parseFloat(cantidadDolares.value) * parseFloat(valorDolarVenta)).toFixed(2);
+    return costoDolarComprado;
 };
 //Funcion que coinvierte un numero al formato a dolar
 const numeroADolar = (dinero) => {
@@ -30,11 +29,6 @@ const numeroADolar = (dinero) => {
     currency: "USD",
     currencyDisplay: "name",
   }).format(dinero));
-};
-//Codigo que actualiza el saldo de la caja de ahorro simulada
-const actualizarSaldoCajaAhorro = () => {
-  saldoCajaAhorro = convertirStorageANumero() - comprarDolares();
-  return saldoCajaAhorro;
 };
 //Funcion que inyecta la tabla con la cotizacion del dolar en tiempo real
 const mostrarCotizacion = () => {
@@ -74,13 +68,16 @@ const mostrarCotizacion = () => {
   let tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 };
+const subtitulo = document.querySelector(".text-container")
 //Funcion que obtiene el valor del dolar blue en tiempo real
 async function obtenerValorDolar() {
   const dolar = "https://api-dolar-argentina.herokuapp.com/api/dolarblue";
   const resp = await fetch(dolar);
   const data = await resp.json();
+  subtitulo.classList.remove("text-disable")
   valorDolarCompra = data.compra;
   valorDolarVenta = data.venta;
+
   mostrarCotizacion();
   comprarDolares();
 }
@@ -88,9 +85,7 @@ async function obtenerValorDolar() {
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
-    title: `Desea adquirir ${numeroADolar(
-      cantidadDolares.value
-    )} a ${numeroADinero(comprarDolares())} ?`,
+    title: `Desea adquirir ${numeroADolar(cantidadDolares.value)} a  ${numeroADinero(comprarDolares())} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
@@ -101,11 +96,15 @@ const confirmarOperacion = () => {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      Swal.fire(
-        "Operación realizada con exito. Su saldo es " + convertirSaldoADinero(),
-        "",
-        "success"
-      ).then(function () {
+      Swal.fire({      
+      icon: "succes",
+      title: `Operación realizada con exito. Su saldo es ${numeroADinero(saldoCajaAhorro)}`,
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Aceptar",
+      showClass: {
+        popup: "animate__animated animate__fadeIn",
+      },
+    }).then(function () {
         //Llamada a las funciones
         actualizarSaldoStorage();
         cargarOperacion();
@@ -124,7 +123,11 @@ const confirmarOperacion = () => {
 };
 //Funcion que confirma que el usuario tenga fondos suficientes y no exceda el limite de compra por operacion
 const comprobarCompra = () => {
-  if (actualizarSaldoCajaAhorro() <= 0) {
+  //Funcion que actualiza el saldo si los fondos son suficientes
+  saldoCajaAhorro -= parseFloat(comprarDolares());
+  if (saldoCajaAhorro <= 0) {
+    //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
+    saldoCajaAhorro = localStorage.getItem("saldo");
     Swal.fire({
       icon: "warning",
       title: "Saldo Insuficiente",
@@ -134,7 +137,15 @@ const comprobarCompra = () => {
         popup: "animate__animated animate__fadeIn",
       },
     }).then(() => {
-      Swal.fire("Operación Cancelada", "", "error").then(function () {
+      Swal.fire({
+        icon: "error",
+        title: "Operacion Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
         window.location.href = "../opcion/opcion.html";
       });
     });
