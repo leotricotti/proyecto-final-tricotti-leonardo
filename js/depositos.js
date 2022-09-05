@@ -23,7 +23,6 @@ captura.onclick = () => {
   unformatNumber = inputDepositos.value.split( /\.|\,/).join("") / 100;
   //Llamada a las funciones declaradas
   confirmarOperacion();
-  console.log(typeof(unformatNumber));
 };
 // Constructor del objeto depositos;
 class Operacion {
