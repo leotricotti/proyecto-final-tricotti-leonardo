@@ -2,12 +2,28 @@
 const captura = document.getElementById("depositos-submit");
 //Codigo que captura el boton que modifica la operacion
 const clean = document.getElementById("limpiar-campo");
+// Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a depositar
+clean.onclick = () => {
+  inputDepositos.value = "";
+};
 //Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinero que desea depsositar
 let inputDepositos = document.getElementById("depositos-input");
+//Funcion que separa el miles el numero ingresado por el usuario
+const formatearNumero = () => new AutoNumeric('#depositos-input', {
+  decimalCharacter : ',',
+  digitGroupSeparator : '.',
+});
+//Llamada a la funcion
+formatearNumero();
+//Declaracion de la variable que va a almacenar el importe ingresado por el usuario
+let unformatNumber;
 //Funcion que captura la informacion brindada por el usuario y confirma la operacion
 captura.onclick = () => {
+  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales) 
+  unformatNumber = inputDepositos.value.split( /\.|\,/).join("") / 100;
   //Llamada a las funciones declaradas
   confirmarOperacion();
+  console.log(typeof(unformatNumber));
 };
 // Constructor del objeto depositos;
 class Operacion {
@@ -25,7 +41,7 @@ const crearOperacion = () => {
     capturarDiaDeposito(),
     capturarHoraDeposito(),
     nombrarOperacion(),
-    numeroADinero(depositar()),
+    numeroADinero(unformatNumber),
     numeroADinero(saldoCajaAhorro)
   );
   return nuevaOperacion;
@@ -36,16 +52,11 @@ const capturarDiaDeposito = () => new Date().toLocaleDateString();
 const capturarHoraDeposito = () => new Date().toLocaleTimeString();
 //Codigo que informa el tipo de operacion
 const nombrarOperacion = () => "Depósito";
-//Funcion que captura la informacion sobre la operacion provista por el usuari
-const depositar = () => inputDepositos.value;
-//Funcion que parsea el numero ingresado por el usuario
-const parsearDineroDepositado = () => parseInt(depositar());
 //Funcion que dispara un alert que confirma o cancela la operación
 const confirmarOperacion = () => {
-  saldoCajaAhorro += parsearDineroDepositado();
   Swal.fire({
     icon: "question",
-    title: `Desea depositar la suma de ${numeroADinero(depositar())} ?`,
+    title: `Desea depositar la suma de ${numeroADinero(unformatNumber)} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
@@ -76,7 +87,7 @@ const confirmarOperacion = () => {
         }, 1000);
       });
     } else if (result.isDismissed) {
-      //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
+      //Codigo que evita que el saldo se actualice si la operacion es rechazada
       saldoCajaAhorro = localStorage.getItem("saldo");
       Swal.fire({
         icon: "error",
@@ -112,3 +123,5 @@ const enviarDatos = () => {
       localStorage.setItem("depositoRealizado", JSON.stringify(datos));
     });
 };
+
+
