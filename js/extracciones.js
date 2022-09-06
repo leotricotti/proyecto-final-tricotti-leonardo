@@ -2,7 +2,7 @@
 const modificar = document.getElementById("modificar");
 // Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a extraer
 modificar.onclick = () => {
-  inputExtraccion.value = "";
+  location.reload();
 };
 //Codigo que captura el campo input
 let inputExtraccion = document.getElementById("input");
@@ -11,15 +11,16 @@ const formatearNumero = () =>
   new AutoNumeric("#input", {
     decimalCharacter: ",",
     digitGroupSeparator: ".",
+    modifyValueOnWheel: "false",
   });
 //Llamada a la funcion
 formatearNumero();
 //Declaracion de la variable que va a almacenar el numero ingresado
 let unformatNumber;
 //Codigo que captura el boton que confirma la operacion
-const captura = document.getElementById("submit");
+const operar = document.getElementById("submit");
 //Funcion principal que activa el simulador
-captura.onclick = () => {
+operar.onclick = () => {
   //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales)
   unformatNumber = inputExtraccion.value.split(/\.|\,/).join("") / 100;
   //Llamada a la funcion
