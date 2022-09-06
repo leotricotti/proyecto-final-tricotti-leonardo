@@ -1,29 +1,57 @@
 //Codigo que toma el nombre del titular de la cuenta almacenado en el localstorage
 let cuentaSeleccionada = localStorage.getItem("destinatario");
-//Codigo que captura el boton que confirma la operacion
-let captura = document.getElementById("transferencia-submit");
-//Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinero que desea transferir
-let inputTransferencia = document.getElementById("transferencia-input");
 //Codigo que captura el boton que modifica la operacion
-const clean = document.getElementById("limpiar-campo");
+const modificar = document.getElementById("modificar");
 // Funcion que limpia el campo input si el usuario así lo requiere
-clean.onclick = () => (inputTransferencia.value = "");
+modificar.onclick = () => location.reload();
+//Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinero que desea transferir
+const inputTransferencia = document.getElementById("input");
 //Funcion que separa el miles el numero ingresado por el usuario
-const formatearNumero = () => new AutoNumeric('#transferencia-input', {
-  decimalCharacter : ',',
-  digitGroupSeparator : '.',
-});
+const formatearNumero = () =>
+  new AutoNumeric("#input", {
+    decimalCharacter: ",",
+    digitGroupSeparator: ".",
+    modifyValueOnWheel: "false",
+  });
 //Llamada a la funcion
 formatearNumero();
 //Declaracion de la variable que va a almacenar el importe ingresado por el usuario
 let unformatNumber;
+//Codigo que captura el boton que confirma la operacion
+const operar = document.getElementById("submit");
 //Funcion principal que activa el simulador
-captura.addEventListener("click", function () {
-  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales) 
-  unformatNumber = inputTransferencia.value.split( /\.|\,/).join("") / 100; 
+operar.addEventListener("click", function () {
+  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales)
+  unformatNumber = inputTransferencia.value.split(/\.|\,/).join("") / 100;
   //Llamada a la funcion
-  comprobarSaldo(unformatNumber);
+  comprobarSaldo();
 });
+// Constructor del objeto depositos;
+class Operacion {
+  constructor(fecha, hora, operacion, monto, saldo) {
+    this.fecha = fecha;
+    this.hora = hora;
+    this.operacion = operacion;
+    this.monto = monto;
+    this.saldo = saldo;
+  }
+}
+//Codigo que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
+const crearOperacion = () => {
+  nuevaOperacion = new Operacion(
+    capturarDia(),
+    capturarHora(),
+    nombrarOperacion(),
+    numeroADinero(unformatNumber),
+    numeroADinero(saldoCajaAhorro)
+  );
+  return nuevaOperacion;
+};
+const capturarDia = () => new Date().toLocaleDateString();
+//Funcion que captura la hora en que se realiza la operacion
+const capturarHora = () => new Date().toLocaleTimeString();
+//Codigo que informa el tipo de operacion
+const nombrarOperacion = () => "Transferencia";
 //Codigo que dispara un alert que confirma o cancela la operación
 const confirmarOperacion = () => {
   Swal.fire({
@@ -77,7 +105,7 @@ const confirmarOperacion = () => {
   });
 };
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
-const comprobarSaldo = (valor) => {
+const comprobarSaldo = () => {
   //Funcion que actualiza el saldo si los fondos son suficientes
   saldoCajaAhorro -= unformatNumber;
   if (saldoCajaAhorro <= 0) {
@@ -107,32 +135,6 @@ const comprobarSaldo = (valor) => {
   } else {
     confirmarOperacion();
   }
-};
-const capturarDia = () => new Date().toLocaleDateString();
-//Funcion que captura la hora en que se realiza la operacion
-const capturarHora = () => new Date().toLocaleTimeString();
-//Codigo que informa el tipo de operacion
-const nombrarOperacion = () => "Transferencia";
-// Constructor del objeto depositos;
-class Operacion {
-  constructor(fecha, hora, operacion, monto, saldo) {
-    this.fecha = fecha;
-    this.hora = hora;
-    this.operacion = operacion;
-    this.monto = monto;
-    this.saldo = saldo;
-  }
-}
-//Codigo que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
-const crearOperacion = () => {
-  nuevaOperacion = new Operacion(
-    capturarDia(),
-    capturarHora(),
-    nombrarOperacion(),
-    numeroADinero(unformatNumber),
-    numeroADinero(saldoCajaAhorro)
-  );
-  return nuevaOperacion;
 };
 //Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor
 const cargarOperacion = () => {
