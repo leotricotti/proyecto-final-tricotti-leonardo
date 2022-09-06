@@ -1,6 +1,6 @@
 //Funcion que al consultar el saldo devuelve una tabla con el saldo de las cuentas bancarias simuladas
 function mostarSaldo() {
-  //Codigo que recupera la informacion de las cuentas simuladas del local storage
+  //Codigo que recupera la informacion de las cuentas simuladas del localstorage
   const cuentasLocalStorage = JSON.parse(localStorage.getItem("cuentas"));
   //Codigo que cambia el subtitulo del simulador
   let text = document.querySelector(".text");
@@ -43,7 +43,7 @@ function mostarSaldo() {
   let tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 }
-//Funcion que captura la informacion de las cuentas simuladas y lo inserta en el local storage
+//Funcion que captura la informacion de las cuentas simuladas y la copia al localstorage
 function capturarOperaciones() {
   fetch("../../json/operaciones.json")
     .then((resp) => resp.json())
@@ -134,7 +134,7 @@ function desactivarBtn() {
   btnDesactivado.innerHTML =
     '<a href="#" class="link link-disable"> <div class="btn-izquierda btn-disable" id="btn-movimientos"></div></a>';
 }
-//Evento que recibe informacion del mouse provista por el usuario y ejecuta un afuncion que devuelve el saldo disponible simulado y modifica el html
+//Evento que recibe informacion y ejecuta una funcion que devuelve el saldo disponible simulado y modifica el html
 let btnSaldo = document.getElementById("btn-saldo");
 btnSaldo.addEventListener("click", respuestaClick);
 function respuestaClick() {
