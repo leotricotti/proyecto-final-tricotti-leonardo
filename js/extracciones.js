@@ -5,7 +5,7 @@ modificar.onclick = () => {
   location.reload();
 };
 //Codigo que captura el campo input
-let inputExtraccion = document.getElementById("input");
+const inputExtraccion = document.getElementById("input");
 //Funcion que separa el miles el numero ingresado por el usuario
 const formatearNumero = () =>
   new AutoNumeric("#input", {
