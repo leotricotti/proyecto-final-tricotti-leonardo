@@ -114,39 +114,39 @@ const confirmarOperacion = (servicio, monto) => {
     cancelButtonText: "Cancelar",
     showClass: {
       popup: "animate__animated animate__fadeIn",
-    }
+    },
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire({
-        icon: "success",  
-        title:  `Operación realizada con éxito. Su saldo es ${numeroADinero(
+        icon: "success",
+        title: `Operación realizada con éxito. Su saldo es ${numeroADinero(
           saldoCajaAhorro
         )}`,
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Aceptar",
         showClass: {
           popup: "animate__animated animate__fadeIn",
-        }
+        },
       }).then(function () {
         actualizarSaldoStorage();
         crearOperacion();
         cargarOperacion();
         enviarDatos();
-        setTimeout(function(){
+        setTimeout(function () {
           window.location.href = "../opcion/opcion.html";
         }, 1000);
       });
     } else if (result.isDismissed) {
       Swal.fire({
-      icon: "error",  
-      title: "Operación Cancelada",
-      confirmButtonColor: "#3085d6",
-      confirmButtonText: "Aceptar",
-      showClass: {
-        popup: "animate__animated animate__fadeIn",
-      }
+        icon: "error",
+        title: "Operación Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
       }).then(function () {
-        window.location.href = "../opcion/opcion.html"
+        window.location.href = "../opcion/opcion.html";
       });
     }
   });
@@ -179,16 +179,16 @@ const comprobarSaldo = (servicio, monto) => {
       },
     }).then(() => {
       Swal.fire({
-        icon: "error",  
+        icon: "error",
         title: "Operación Cancelada",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Aceptar",
         showClass: {
           popup: "animate__animated animate__fadeIn",
-        }
-        }).then(function () {
-          window.location.href = "../opcion/opcion.html"
-        });
+        },
+      }).then(function () {
+        window.location.href = "../opcion/opcion.html";
+      });
     });
   } else {
     confirmarOperacion(servicio, monto);
@@ -203,7 +203,7 @@ class Operacion {
     this.monto = monto;
     this.saldo = saldo;
   }
-};
+}
 //Codigo que informa el tipo de operacion
 const nombrarOperacion = () => "Pago Servicio";
 //Funcion que captura la fecha en que se realiza la operación

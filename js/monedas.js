@@ -27,7 +27,7 @@ const operar = document.getElementById("submit");
 //Funcion que llama a las funciones que validan la operacion
 operar.onclick = () => {
   //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales)
-  unformatNumber = inputDolares.value.split(/\.|\,/).join("") / 100;  
+  unformatNumber = inputDolares.value.split(/\.|\,/).join("") / 100;
   comprobarCompra();
 };
 //Funcion que calcula la compra de dolares
@@ -95,14 +95,14 @@ async function obtenerValorDolar() {
   valorDolarVenta = data[1].casa.venta;
   mostrarCotizacion();
   comprarDolares();
-};
+}
 //Funcion que dispara un alert que confirma o cancela la operación
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
-    title: `Desea adquirir ${numeroADolar(
-      unformatNumber
-    )} a  ${numeroADinero(comprarDolares())} ?`,
+    title: `Desea adquirir ${numeroADolar(unformatNumber)} a  ${numeroADinero(
+      comprarDolares()
+    )} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "Aceptar",
@@ -194,7 +194,7 @@ const comprobarCompra = () => {
           popup: "animate__animated animate__fadeIn",
         },
       }).then(function () {
-        //Codigo que evita que el saldo se actualice 
+        //Codigo que evita que el saldo se actualice
         saldoCajaAhorro = localStorage.getItem("saldo");
         window.location.href = "../opcion/opcion.html";
       });
@@ -249,6 +249,4 @@ const enviarDatos = () => {
     .then((datos) => {
       localStorage.setItem("comprarDolar", JSON.stringify(datos));
     });
-    
 };
-

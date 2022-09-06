@@ -1,5 +1,7 @@
 //Codigo que recupera la informacion de las cuentas simuladas del local storage
-const cuentasHabilitadasLocalStorage = JSON.parse(localStorage.getItem("cuentasHabilitadas"));
+const cuentasHabilitadasLocalStorage = JSON.parse(
+  localStorage.getItem("cuentasHabilitadas")
+);
 //Funcion que inyecta la tabla cuentas habilitadas a recibir transferencias en el html
 function mostrarCuentas(...array) {
   //Código que crea el elemento tabla y le asigna sus clases
@@ -51,34 +53,34 @@ let inputTransferencia = document.getElementById("transferencia-input");
 let capturarValor = document.getElementById("transferencia-submit");
 //Operador que desestructura el array de objetos
 const [a, b, c, d, e] = cuentasHabilitadasLocalStorage;
-const toTop = () => window.scrollTo({top : 0});
-//Funcion que captura la cuenta seleccionada 
+const toTop = () => window.scrollTo({ top: 0 });
+//Funcion que captura la cuenta seleccionada
 const seleccionarCuenta = (inputValue) => {
   if (inputValue == "01") {
-    //Codigo que almacena en localstorage el nombre del titular de la cuenta a la que se va a enviar dinero para luego ser reutilizado como confirmacion 
+    //Codigo que almacena en localstorage el nombre del titular de la cuenta a la que se va a enviar dinero para luego ser reutilizado como confirmacion
     destinatario = localStorage.setItem("destinatario", `${a.titular}`);
     //Codigo que cambia al html siguiente
     document.location.href = "monto.html";
   } else if (inputValue == "02") {
-    //Codigo que almacena en localstorage el nombre del titular de la cuenta a la que se va a enviar dinero para luego ser reutilizado como confirmacion 
+    //Codigo que almacena en localstorage el nombre del titular de la cuenta a la que se va a enviar dinero para luego ser reutilizado como confirmacion
     destinatario = localStorage.setItem("destinatario", `${b.titular}`);
     //Codigo que cambia al html siguiente
     document.location.href = "monto.html";
   } else if (inputValue == "03") {
-    //Codigo que almacena en localstorage el nombre del titular de la cuenta a la que se va a enviar dinero para luego ser reutilizado como confirmacion 
+    //Codigo que almacena en localstorage el nombre del titular de la cuenta a la que se va a enviar dinero para luego ser reutilizado como confirmacion
     destinatario = localStorage.setItem("destinatario", `${c.titular}`);
     //Codigo que cambia al html siguiente
     document.location.href = "monto.html";
   } else if (inputValue == "04") {
-    //Codigo que almacena en localstorage el nombre del titular de la cuenta a la que se va a enviar dinero para luego ser reutilizado como confirmacion 
+    //Codigo que almacena en localstorage el nombre del titular de la cuenta a la que se va a enviar dinero para luego ser reutilizado como confirmacion
     destinatario = localStorage.setItem("destinatario", `${d.titular}`);
     //Codigo que cambia al html siguiente
     document.location.href = "monto.html";
   } else if (inputValue == "05") {
-    //Codigo que almacena en localstorage el titular de la cuenta a la que se va a enviar dinero para ser reutilizado como confirmacion 
+    //Codigo que almacena en localstorage el titular de la cuenta a la que se va a enviar dinero para ser reutilizado como confirmacion
     destinatario = localStorage.setItem("destinatario", `${e.titular}`);
     //Codigo que cambia al html siguiente
-    document.location.href = "monto.html";   
+    document.location.href = "monto.html";
   } else {
     //Funcion que devuelve un alert si la opcion ingresada es invalida
     Swal.fire({
@@ -93,7 +95,7 @@ const seleccionarCuenta = (inputValue) => {
       //Codigo que limpia el campo cuando se ingresa una opcion invalida
       inputTransferencia.value = "";
     });
-  }  
+  }
 };
 //Codigo que captura el boton modificar
 const limpiarCampo = document.getElementById("limpiar-campo");
@@ -105,4 +107,3 @@ limpiarCampo.onclick = () => {
 capturarValor.addEventListener("click", function () {
   seleccionarCuenta(inputTransferencia.value);
 });
-
