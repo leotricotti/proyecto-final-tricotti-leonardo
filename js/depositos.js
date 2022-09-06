@@ -1,26 +1,28 @@
 //Codigo que captura el boton Modificar
-const clean = document.getElementById("limpiar-campo");
-//Funcion que limpia el campo input 
-clean.onclick = () => {
-  inputDepositos.value = "";
+const modificar = document.getElementById("modificar");
+//Funcion que limpia el campo input
+modificar.onclick = () => {
+  location.reload();
 };
 //Codigo que captura el campo input
-let inputDepositos = document.getElementById("depositos-input");
+let inputDepositos = document.getElementById("input");
 //Funcion que separa en miles y agrega decimales
-const formatearNumero = () => new AutoNumeric('#depositos-input', {
-  decimalCharacter : ',',
-  digitGroupSeparator : '.',
-});
+const formatearNumero = () =>
+  new AutoNumeric("#input", {
+    decimalCharacter: ",",
+    digitGroupSeparator: ".",
+    modifyValueOnWheel: "false",
+  });
 //Llamada a la funcion
 formatearNumero();
 //Declaracion de la variable que va a almacenar
 let unformatNumber;
 //Codigo que captura el boton Aceptar
-const captura = document.getElementById("depositos-submit");
+const operar = document.getElementById("submit");
 //Funcion que captura la informacion brindada por el usuario y confirma la operacion
-captura.onclick = () => {
-  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales) 
-  unformatNumber = inputDepositos.value.split( /\.|\,/).join("") / 100;
+operar.onclick = () => {
+  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales)
+  unformatNumber = inputDepositos.value.split(/\.|\,/).join("") / 100;
   //Llamada a la funcion
   confirmarOperacion();
 };
@@ -66,7 +68,7 @@ const confirmarOperacion = () => {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      //Codigo que actualiza el saldo 
+      //Codigo que actualiza el saldo
       saldoCajaAhorro += unformatNumber;
       Swal.fire({
         icon: "success",
@@ -121,5 +123,3 @@ const enviarDatos = () => {
       localStorage.setItem("depositoRealizado", JSON.stringify(datos));
     });
 };
-
-
