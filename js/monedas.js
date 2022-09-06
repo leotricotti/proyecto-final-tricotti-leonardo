@@ -1,7 +1,6 @@
 //Funcion que carga la funcion que inyecta la tabla con la cotizacion del dolar en tiempo real
-window.onload = () => {
-  obtenerValorDolar();
-};
+window.onload = () => obtenerValorDolar();
+
 //Variables necesarias para operar
 let valorDolarCompra;
 let valorDolarVenta;
@@ -9,9 +8,7 @@ let costoDolarComprado;
 //Codigo que captura el boton que modifica el valor ingresado
 const modificar = document.getElementById("modificar");
 //Funcion que limpia el campo input en caso de que el usuario quiera modificar el numero ingresado
-modificar.onclick = () => {
-  inputDolares.value = "";
-};
+modificar.onclick = () => location.reload();
 //Codigo que captura el campo input
 const inputDolares = document.getElementById("input");
 //Funcion que separa el miles el numero ingresado por el usuario

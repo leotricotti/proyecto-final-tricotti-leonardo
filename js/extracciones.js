@@ -1,9 +1,7 @@
 //Codigo que captura el boton Modificar
 const modificar = document.getElementById("modificar");
 // Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a extraer
-modificar.onclick = () => {
-  location.reload();
-};
+modificar.onclick = () => location.reload();
 //Codigo que captura el campo input
 const inputExtraccion = document.getElementById("input");
 //Funcion que separa el miles el numero ingresado por el usuario
