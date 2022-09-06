@@ -10,7 +10,6 @@ const capturarHoraExtraccion = () => new Date().toLocaleTimeString();
 const nombrarOperacion = () => "Extraccion Adelanto";
 //Codigo que captura el boton que confirma la operacion
 const captura = document.getElementById("extracciones-submit");
-//Funcion que captura la informacion brindada por el usuario y la convierte en un objeto
 //Funcion que separa el miles el numero ingresado por el usuario
 const formatearNumero = () => new AutoNumeric('#extracciones-input', {
   decimalCharacter : ',',
@@ -20,13 +19,14 @@ const formatearNumero = () => new AutoNumeric('#extracciones-input', {
 formatearNumero();
 //Declaracion de la variable que va a almacenar el importe ingresado por el usuario
 let unformatNumber;
+//Funcion principal que activa el simulador
 captura.onclick = () => {
   //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales) 
   unformatNumber = inputExtraccion.value.split( /\.|\,/).join("") / 100;  
   //Llamada a las funciones declaradas
   comprobarSaldo();
 };
-// Constructor del objeto depositos;
+//Constructor del objeto depositos;
 class Operacion {
   constructor(fecha, hora, operacion, monto, saldo) {
     this.fecha = fecha;
