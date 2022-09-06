@@ -1,27 +1,27 @@
-//Codigo que captura el boton que confirma la operacion
-const captura = document.getElementById("depositos-submit");
-//Codigo que captura el boton que modifica la operacion
+//Codigo que captura el boton Modificar
 const clean = document.getElementById("limpiar-campo");
-// Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a depositar
+//Funcion que limpia el campo input 
 clean.onclick = () => {
   inputDepositos.value = "";
 };
-//Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinero que desea depsositar
+//Codigo que captura el campo input
 let inputDepositos = document.getElementById("depositos-input");
-//Funcion que separa el miles el numero ingresado por el usuario
+//Funcion que separa en miles y agrega decimales
 const formatearNumero = () => new AutoNumeric('#depositos-input', {
   decimalCharacter : ',',
   digitGroupSeparator : '.',
 });
 //Llamada a la funcion
 formatearNumero();
-//Declaracion de la variable que va a almacenar el importe ingresado por el usuario
+//Declaracion de la variable que va a almacenar el numero ingresado
 let unformatNumber;
+//Codigo que captura el boton Aceptar
+const captura = document.getElementById("depositos-submit");
 //Funcion que captura la informacion brindada por el usuario y confirma la operacion
 captura.onclick = () => {
   //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales) 
   unformatNumber = inputDepositos.value.split( /\.|\,/).join("") / 100;
-  //Llamada a las funciones declaradas
+  //Llamada a la funcion
   confirmarOperacion();
 };
 // Constructor del objeto depositos;
@@ -37,8 +37,8 @@ class Operacion {
 //Funcion que utiliza el constructor Depositos para crear un nuevo objeto que contiene los datos de la operacion realizada
 const crearOperacion = () => {
   nuevaOperacion = new Operacion(
-    capturarDiaDeposito(),
-    capturarHoraDeposito(),
+    capturarDia(),
+    capturarHora(),
     nombrarOperacion(),
     numeroADinero(unformatNumber),
     numeroADinero(saldoCajaAhorro)
@@ -46,9 +46,9 @@ const crearOperacion = () => {
   return nuevaOperacion;
 };
 //Funcion que captura la fecha en que se realiza la operación
-const capturarDiaDeposito = () => new Date().toLocaleDateString();
+const capturarDia = () => new Date().toLocaleDateString();
 //Funcion que captura la hora en que se realiza la operacion
-const capturarHoraDeposito = () => new Date().toLocaleTimeString();
+const capturarHora = () => new Date().toLocaleTimeString();
 //Codigo que informa el tipo de operacion
 const nombrarOperacion = () => "Depósito";
 //Funcion que dispara un alert que confirma o cancela la operación
@@ -77,17 +77,17 @@ const confirmarOperacion = () => {
           popup: "animate__animated animate__fadeIn",
         },
       }).then(function () {
-        crearOperacion();
-        cargarOperacion();
+        //Codigo que actualiza el saldo 
+        saldoCajaAhorro += unformatNumber;
         actualizarSaldoStorage();
+        cargarOperacion();
         enviarDatos();
+        //Codigo que compenza la latencia del servidor
         setTimeout(function () {
           window.location.href = "../opcion/opcion.html";
         }, 1000);
       });
     } else if (result.isDismissed) {
-      //Codigo que evita que el saldo se actualice si la operacion es rechazada
-      saldoCajaAhorro = localStorage.getItem("saldo");
       Swal.fire({
         icon: "error",
         title: "Operación Cancelada",
