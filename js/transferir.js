@@ -81,7 +81,7 @@ const comprobarSaldo = (valor) => {
   //Funcion que actualiza el saldo si los fondos son suficientes
   saldoCajaAhorro -= unformatNumber;
   if (saldoCajaAhorro <= 0) {
-    //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
+    //Codigo que evita que el saldo se actualice
     saldoCajaAhorro = localStorage.getItem("saldo");
     Swal.fire({
       icon: "warning",
