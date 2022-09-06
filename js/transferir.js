@@ -1,25 +1,35 @@
-//Codigo para cambiar el subtitulo del simulador
-const text = document.querySelector(".text");
-text.innerHTML =
-  '<p class="text"> Ingrese el monto que desea transferir: <input type="number" class="input" id="transferencia-input"></p>';
 //Codigo que toma el nombre del titular de la cuenta almacenado en el localstorage
 let cuentaSeleccionada = localStorage.getItem("destinatario");
 //Codigo que captura el boton que confirma la operacion
-let capturarValor = document.getElementById("transferencia-submit");
+let captura = document.getElementById("transferencia-submit");
 //Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinero que desea transferir
 let inputTransferencia = document.getElementById("transferencia-input");
 //Codigo que captura el boton que modifica la operacion
 const clean = document.getElementById("limpiar-campo");
-//Codigo que captura el boton modificar
-const opcionModificada = document.getElementById("limpiar-campo");
 // Funcion que limpia el campo input si el usuario así lo requiere
-opcionModificada.onclick = () => (inputTransferencia.value = "");
+clean.onclick = () => (inputTransferencia.value = "");
+//Funcion que separa el miles el numero ingresado por el usuario
+const formatearNumero = () => new AutoNumeric('#transferencia-input', {
+  decimalCharacter : ',',
+  digitGroupSeparator : '.',
+});
+//Llamada a la funcion
+formatearNumero();
+//Declaracion de la variable que va a almacenar el importe ingresado por el usuario
+let unformatNumber;
+//Funcion principal que activa el simulador
+captura.addEventListener("click", function () {
+  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales) 
+  unformatNumber = inputTransferencia.value.split( /\.|\,/).join("") / 100; 
+  //Llamada a la funcion
+  comprobarSaldo(unformatNumber);
+});
 //Codigo que dispara un alert que confirma o cancela la operación
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
     title: `Desea transferir a ${cuentaSeleccionada} la suma de ${numeroADinero(
-      inputTransferencia.value
+      unformatNumber
     )} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
@@ -69,7 +79,7 @@ const confirmarOperacion = () => {
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
 const comprobarSaldo = (valor) => {
   //Funcion que actualiza el saldo si los fondos son suficientes
-  saldoCajaAhorro -= parseFloat(valor);
+  saldoCajaAhorro -= unformatNumber;
   if (saldoCajaAhorro <= 0) {
     //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
     saldoCajaAhorro = localStorage.getItem("saldo");
@@ -98,21 +108,11 @@ const comprobarSaldo = (valor) => {
     confirmarOperacion();
   }
 };
-//Codigo que establece un contador que permite armar el condicional
-let contadorClicks = 0;
-//Funcion que alterna las llamadas a las funciones sobre el mismo boton html
-capturarValor.addEventListener("click", function () {
-  comprobarSaldo(inputTransferencia.value);
-});
 const capturarDia = () => new Date().toLocaleDateString();
 //Funcion que captura la hora en que se realiza la operacion
 const capturarHora = () => new Date().toLocaleTimeString();
 //Codigo que informa el tipo de operacion
 const nombrarOperacion = () => "Transferencia";
-//Funcion que captura la informacion sobre la operacion provista por el usuario
-const transferirDinero = () => inputTransferencia.value;
-//Funcion que parsea el numero ingresado por el usuario
-const parsearDineroTransferido = () => parseFloat(transferirDinero());
 // Constructor del objeto depositos;
 class Operacion {
   constructor(fecha, hora, operacion, monto, saldo) {
@@ -129,7 +129,7 @@ const crearOperacion = () => {
     capturarDia(),
     capturarHora(),
     nombrarOperacion(),
-    numeroADinero(inputTransferencia.value),
+    numeroADinero(unformatNumber),
     numeroADinero(saldoCajaAhorro)
   );
   return nuevaOperacion;
