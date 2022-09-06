@@ -66,6 +66,8 @@ const confirmarOperacion = () => {
     },
   }).then((result) => {
     if (result.isConfirmed) {
+      //Codigo que actualiza el saldo 
+      saldoCajaAhorro += unformatNumber;
       Swal.fire({
         icon: "success",
         title: `Operación realizada con exito. Su saldo es ${numeroADinero(
@@ -77,8 +79,6 @@ const confirmarOperacion = () => {
           popup: "animate__animated animate__fadeIn",
         },
       }).then(function () {
-        //Codigo que actualiza el saldo 
-        saldoCajaAhorro += unformatNumber;
         actualizarSaldoStorage();
         cargarOperacion();
         enviarDatos();
