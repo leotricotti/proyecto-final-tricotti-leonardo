@@ -13,7 +13,7 @@ const formatearNumero = () => new AutoNumeric('#depositos-input', {
 });
 //Llamada a la funcion
 formatearNumero();
-//Declaracion de la variable que va a almacenar el numero ingresado
+//Declaracion de la variable que va a almacenar
 let unformatNumber;
 //Codigo que captura el boton Aceptar
 const captura = document.getElementById("depositos-submit");
@@ -118,7 +118,6 @@ const enviarDatos = () => {
   })
     .then((respuesta) => respuesta.json())
     .then((datos) => {
-      console.log(datos);
       localStorage.setItem("depositoRealizado", JSON.stringify(datos));
     });
 };
