@@ -1,116 +1,105 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Favicon -->
-    <link
-      rel="shortcut icon"
-      href="../../img/favicon/favicon.png"
-      type="image/x-icon"
-    />
-    <!-- Animated -->
-    <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-    <!-- CSS -->
-    <link rel="stylesheet" href="../../css/style.css" />
-    <!-- Tittle -->
-    <title>Simulador cajero automático</title>
-  </head>
-  <body>
-    <!-- Grid Container -->
-    <div class="grid-container">
-      <!-- Header -->
-      <header class="header-container">
-        <img
-          src="../../img/logo-header/BancoPatagonia_bco.png"
-          alt="Logo Banco Pataginia"
-          class="bank-logo"
-        />
-      </header>
-      <!-- Main Heading -->
-      <section class="heading-container">
-        <p class="main-heading">Simulador Red Link</p>
-      </section>
-      <!-- Main -->
-      <main class="cajero-container">
-        <div class="text-container">
-          <p class="text">Ingrese el importe que desea retirar: $ <input type="text" class="input" id="input"> </p>
-        </div>
-        <section class="teclado-container">
-          <div class="teclado-izquierda">
-            <ul class="teclas-container">
-              <li class="teclas-izquierda">
-                <a href="#" class="link link-disable">
-                  <div class="btn-izquierda btn-disable"></div>
-                </a>
-              </li>
-              <li class="teclas-izquierda">
-                <a href="#" class="link link-disable">
-                  <div class="btn-izquierda btn-disable"></div>
-                </a>
-              </li>
-              <li class="teclas-izquierda">
-                <a href="#" class="link link-disable">
-                  <div class="btn-izquierda btn-disable"></div>
-                </a>
-              </li>
-              <li class="teclas-izquierda">
-                <a href="#" class="link link-disable">
-                  <div class="btn-izquierda btn-disable"></div>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="teclado-derecha">
-            <ul class="teclas-container">
-              <li class="teclas-derecha">
-                <a href="#" class="link link-disable">
-                  <div class="btn-derecha btn-disable"></div>
-                </a>
-              </li>
-              <li class="teclas-derecha">
-                <p class="agregar-texto"></p>
-                <a href="#" class="link link-disable">
-                  <div class="btn-derecha btn-disable"></div>
-                </a>
-              </li>
-              <li class="teclas-derecha opcion-modificada">
-                <p>Modificar -- &gt;&gt;</p>
-                <a href="#" class="link" id="modificar">
-                  <div class="btn-derecha"></div>
-                </a>
-              </li>
-              <li class="teclas-derecha opcion-modificada-dos" id="submit">
-                <p>Aceptar -- &gt;&gt;</p>
-                  <div class="btn-derecha link"></div>
-              </li>
-            </ul>
-            <div class="separador"></div>
-          </div>
-        </section>
-      </main>
-      <!-- Footer -->
-      <footer class="footer-container">
-        <img
-          src="../../img/footer/BancoPatagonia_bco-600x71.png"
-          alt="Logo Banco Patagonia"
-        />
-      </footer>
-      <!-- Bottom -->
-      <div class="bottom">
-        <p>@2022 - Leonardo Tricotti</p>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="../../img/favicon/favicon.png" type="image/x-icon" />
+  <!-- Animated -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="../../css/style.css" />
+  <!-- Tittle -->
+  <title>Simulador cajero automático</title>
+</head>
+
+<body>
+  <!-- Grid Container -->
+  <div class="grid-container">
+    <!-- Header -->
+    <header class="header-container">
+      <img src="../../img/logo-header/BancoPatagonia_bco.png" alt="Logo Banco Pataginia" class="bank-logo" />
+    </header>
+    <!-- Main Heading -->
+    <section class="heading-container">
+      <p class="main-heading">Simulador Red Link</p>
+    </section>
+    <!-- Main -->
+    <main class="cajero-container">
+      <div class="text-container">
+        <p class="text">Ingrese el importe que desea retirar: $ <input type="text" class="input" id="input"> </p>
       </div>
+      <section class="teclado-container">
+        <div class="teclado-izquierda">
+          <ul class="teclas-container">
+            <li class="teclas-izquierda">
+              <a href="#" class="link link-disable">
+                <div class="btn-izquierda btn-disable"></div>
+              </a>
+            </li>
+            <li class="teclas-izquierda">
+              <a href="#" class="link link-disable">
+                <div class="btn-izquierda btn-disable"></div>
+              </a>
+            </li>
+            <li class="teclas-izquierda">
+              <a href="#" class="link link-disable">
+                <div class="btn-izquierda btn-disable"></div>
+              </a>
+            </li>
+            <li class="teclas-izquierda">
+              <a href="#" class="link link-disable">
+                <div class="btn-izquierda btn-disable"></div>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="teclado-derecha">
+          <ul class="teclas-container">
+            <li class="teclas-derecha">
+              <a href="#" class="link link-disable">
+                <div class="btn-derecha btn-disable"></div>
+              </a>
+            </li>
+            <li class="teclas-derecha">
+              <p class="agregar-texto"></p>
+              <a href="#" class="link link-disable">
+                <div class="btn-derecha btn-disable"></div>
+              </a>
+            </li>
+            <li class="teclas-derecha opcion-modificada">
+              <p>Modificar -- &gt;&gt;</p>
+              <a href="#" class="link" id="modificar">
+                <div class="btn-derecha"></div>
+              </a>
+            </li>
+            <li class="teclas-derecha opcion-modificada-dos" id="submit">
+              <p>Aceptar -- &gt;&gt;</p>
+              <div class="btn-derecha link"></div>
+            </li>
+          </ul>
+          <div class="separador"></div>
+        </div>
+      </section>
+    </main>
+    <!-- Footer -->
+    <footer class="footer-container">
+      <img src="../../img/footer/BancoPatagonia_bco-600x71.png" alt="Logo Banco Patagonia" />
+    </footer>
+    <!-- Bottom -->
+    <div class="bottom">
+      <p>@2022 - Leonardo Tricotti</p>
     </div>
-    <!-- Sweetalert -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Autonumeric -->
-    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.1.0"></script>
-    <!-- JS -->
-    <script src="../../js/funciones-generales.js"></script>
-    <script src="../../js/extracciones.js"></script>
-  </body>
+  </div>
+  <!-- Sweetalert -->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Autonumeric -->
+  <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.1.0"></script>
+  <!-- JS -->
+  <script src="../../js/funciones-generales.js"></script>
+  <script src="../../js/extracciones.js"></script>
+</body>
+
 </html>
