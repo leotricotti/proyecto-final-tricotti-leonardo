@@ -1,29 +1,28 @@
-//Codigo que captura el boton que modifica la operacion
-const clean = document.getElementById("limpiar-campo");
-//Codigo que captura el campo donde el usuario debe ingresar la cantidad de dinerao que desea depsositar
-let inputExtraccion = document.getElementById("extracciones-input");
-//Funcion que captura la fecha en que se realiza la operación
-const capturarDiaExtraccion = () => new Date().toLocaleDateString();
-//Funcion que captura la hora en que se realiza la operacion
-const capturarHoraExtraccion = () => new Date().toLocaleTimeString();
-//Codigo que informa el tipo de operacion
-const nombrarOperacion = () => "Extraccion Adelanto";
-//Codigo que captura el boton que confirma la operacion
-const captura = document.getElementById("extracciones-submit");
+//Codigo que captura el boton Modificar
+const modificar = document.getElementById("modificar");
+// Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a extraer
+modificar.onclick = () => {
+  inputExtraccion.value = "";
+};
+//Codigo que captura el campo input
+let inputExtraccion = document.getElementById("input");
 //Funcion que separa el miles el numero ingresado por el usuario
-const formatearNumero = () => new AutoNumeric('#extracciones-input', {
-  decimalCharacter : ',',
-  digitGroupSeparator : '.',
-});
+const formatearNumero = () =>
+  new AutoNumeric("#input", {
+    decimalCharacter: ",",
+    digitGroupSeparator: ".",
+  });
 //Llamada a la funcion
 formatearNumero();
-//Declaracion de la variable que va a almacenar el importe ingresado por el usuario
+//Declaracion de la variable que va a almacenar el numero ingresado
 let unformatNumber;
+//Codigo que captura el boton que confirma la operacion
+const captura = document.getElementById("submit");
 //Funcion principal que activa el simulador
 captura.onclick = () => {
-  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales) 
-  unformatNumber = inputExtraccion.value.split( /\.|\,/).join("") / 100;  
-  //Llamada a las funciones declaradas
+  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales)
+  unformatNumber = inputExtraccion.value.split(/\.|\,/).join("") / 100;
+  //Llamada a la funcion
   comprobarSaldo();
 };
 //Constructor del objeto depositos;
@@ -47,12 +46,13 @@ const crearOperacion = () => {
   );
   return nuevaOperacion;
 };
-// Funcion que limpia el campo input en caso de que el usuario quiera modificar el importe a extraer
-clean.onclick = () => {
-  inputExtraccion.value = "";
-};
+//Funcion que captura la fecha en que se realiza la operación
+const capturarDiaExtraccion = () => new Date().toLocaleDateString();
+//Funcion que captura la hora en que se realiza la operacion
+const capturarHoraExtraccion = () => new Date().toLocaleTimeString();
+//Codigo que informa el tipo de operacion
+const nombrarOperacion = () => "Extraccion Adelanto";
 //Codigo que dispara un alerta que confirma o cancela la operación
-const text = document.querySelector(".text");
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
@@ -81,6 +81,7 @@ const confirmarOperacion = () => {
         actualizarSaldoStorage();
         cargarOperacion();
         enviarDatos();
+        //Codigo que compenza la latencia del servidor
         setTimeout(function () {
           window.location.href = "../opcion/opcion.html";
         }, 1000);
@@ -102,10 +103,10 @@ const confirmarOperacion = () => {
 };
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
 const comprobarSaldo = () => {
-  //Funcion que actualiza el saldo si los fondos son suficientes
+  //Codigo que actualiza el saldo
   saldoCajaAhorro -= unformatNumber;
   if (saldoCajaAhorro <= 0) {
-    //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
+    //Codigo que evita que el saldo si la operacion es rechazada
     saldoCajaAhorro = localStorage.getItem("saldo");
     Swal.fire({
       icon: "warning",
@@ -149,7 +150,6 @@ const enviarDatos = () => {
   })
     .then((respuesta) => respuesta.json())
     .then((datos) => {
-      console.log(datos);
       localStorage.setItem("extraccionRealizada", JSON.stringify(datos));
     });
 };
