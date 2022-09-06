@@ -6,20 +6,37 @@ window.onload = () => {
 let valorDolarCompra;
 let valorDolarVenta;
 let costoDolarComprado;
-//Codigo que captura el campo para ingresar los dolares que se desean comprar
-const cantidadDolares = document.getElementById("monedas-input");
-//Codigo que captura el boton que confirma la operacion
-const dolaresComprados = document.getElementById("monedas-submit");
 //Codigo que captura el boton que modifica el valor ingresado
-const clean = document.getElementById("limpiar-campo");
+const modificar = document.getElementById("modificar");
 //Funcion que limpia el campo input en caso de que el usuario quiera modificar el numero ingresado
-clean.onclick = () => {
-  cantidadDolares.value = "";
+modificar.onclick = () => {
+  inputDolares.value = "";
+};
+//Codigo que captura el campo input
+const inputDolares = document.getElementById("input");
+//Funcion que separa el miles el numero ingresado por el usuario
+const formatearNumero = () =>
+  new AutoNumeric("#input", {
+    decimalCharacter: ",",
+    digitGroupSeparator: ".",
+    modifyValueOnWheel: "false",
+  });
+//Llamada a la funcion
+formatearNumero();
+//Declaracion de la variable que va a almacenar el numero ingresado
+let unformatNumber;
+//Codigo que captura el boton que confirma la operacion
+const operar = document.getElementById("submit");
+//Funcion que llama a las funciones que validan la operacion
+operar.onclick = () => {
+  //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales)
+  unformatNumber = inputDolares.value.split(/\.|\,/).join("") / 100;  
+  comprobarCompra();
 };
 //Funcion que calcula la compra de dolares
 const comprarDolares = () => {
   costoDolarComprado = (
-    parseFloat(cantidadDolares.value) * parseFloat(valorDolarVenta)
+    parseFloat(unformatNumber) * parseFloat(valorDolarVenta)
   ).toFixed(2);
   return costoDolarComprado;
 };
@@ -58,8 +75,8 @@ const mostrarCotizacion = () => {
           <td>${new Date().toLocaleDateString()}</td>
           <td>${new Date().toLocaleTimeString()}</td>
           <td>Dolar Estadounidense</td>
-          <td>${numeroADinero(valorDolarCompra)}</td>
-          <td>${numeroADinero(valorDolarVenta)}</td>
+          <td>${numeroADinero(parseFloat(valorDolarCompra))}</td>
+          <td>${numeroADinero(parseFloat(valorDolarVenta))}</td>
         </tr>
       `;
   //Codigo que agrega la cabeza y el cuerpo a la tabla creada anteriormente
@@ -72,22 +89,22 @@ const mostrarCotizacion = () => {
 const subtitulo = document.querySelector(".text-container");
 //Funcion que obtiene el valor del dolar blue en tiempo real
 async function obtenerValorDolar() {
-  const dolar = "https://api-dolar-argentina.herokuapp.com/api/dolarblue";
+  const dolar = "https://www.dolarsi.com/api/api.php?type=valoresprincipales";
   const resp = await fetch(dolar);
   const data = await resp.json();
   //Codigo que permite que los datos del servidor y el input carguen en simultaneo
   subtitulo.classList.remove("text-disable");
-  valorDolarCompra = data.compra;
-  valorDolarVenta = data.venta;
+  valorDolarCompra = data[1].casa.compra;
+  valorDolarVenta = data[1].casa.venta;
   mostrarCotizacion();
   comprarDolares();
-}
+};
 //Funcion que dispara un alert que confirma o cancela la operación
 const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
     title: `Desea adquirir ${numeroADolar(
-      cantidadDolares.value
+      unformatNumber
     )} a  ${numeroADinero(comprarDolares())} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
@@ -113,8 +130,8 @@ const confirmarOperacion = () => {
         //Llamada a las funciones
         actualizarSaldoStorage();
         cargarOperacion();
-        crearOperacion();
         enviarDatos();
+        //Codigo que compenza la latencia del servidor
         setTimeout(function () {
           window.location.href = "../opcion/opcion.html";
         }, 1000);
@@ -136,33 +153,10 @@ const confirmarOperacion = () => {
 };
 //Funcion que confirma que el usuario tenga fondos suficientes y no exceda el limite de compra por operacion
 const comprobarCompra = () => {
-  //Funcion que actualiza el saldo si los fondos son suficientes
+  //Codigo que realiza la operacion
   saldoCajaAhorro -= parseFloat(comprarDolares());
-  if (saldoCajaAhorro <= 0) {
+  if (inputDolares.value <= 0 || inputDolares.value > 200) {
     //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
-    saldoCajaAhorro = localStorage.getItem("saldo");
-    Swal.fire({
-      icon: "warning",
-      title: "Saldo Insuficiente",
-      confirmButtonColor: "#3085d6",
-      confirmButtonText: "Aceptar",
-      showClass: {
-        popup: "animate__animated animate__fadeIn",
-      },
-    }).then(() => {
-      Swal.fire({
-        icon: "error",
-        title: "Operacion Cancelada",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Aceptar",
-        showClass: {
-          popup: "animate__animated animate__fadeIn",
-        },
-      }).then(function () {
-        window.location.href = "../opcion/opcion.html";
-      });
-    });
-  } else if (cantidadDolares.value <= 0 || cantidadDolares.value > 200) {
     Swal.fire({
       icon: "warning",
       title: "Verifique la cantidad ingresada",
@@ -181,16 +175,36 @@ const comprobarCompra = () => {
           popup: "animate__animated animate__fadeIn",
         },
       }).then(function () {
-        cantidadDolares.value = "";
+        window.location.href = "../opcion/opcion.html";
+      });
+    });
+  } else if (saldoCajaAhorro <= 0) {
+    Swal.fire({
+      icon: "warning",
+      title: "Saldo insuficiente",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Aceptar",
+      showClass: {
+        popup: "animate__animated animate__fadeIn",
+      },
+    }).then(() => {
+      Swal.fire({
+        icon: "error",
+        title: "Operacion Cancelada",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
+        showClass: {
+          popup: "animate__animated animate__fadeIn",
+        },
+      }).then(function () {
+        //Codigo que evita que el saldo se actualice 
+        saldoCajaAhorro = localStorage.getItem("saldo");
+        window.location.href = "../opcion/opcion.html";
       });
     });
   } else {
     confirmarOperacion();
   }
-};
-//Funcion que llama a las funciones que validan la operacion
-dolaresComprados.onclick = () => {
-  comprobarCompra();
 };
 // Constructor del objeto operaciones
 class Operacion {
@@ -236,8 +250,8 @@ const enviarDatos = () => {
   })
     .then((respuesta) => respuesta.json())
     .then((datos) => {
-      console.log(datos);
       localStorage.setItem("comprarDolar", JSON.stringify(datos));
     });
+    
 };
 
