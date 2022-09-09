@@ -80,7 +80,7 @@ const inyectarTabla = (respuesta) => {
       <td>${formatearPrecio(dato.price.previous_close)}</td>
       <td>${quitarDecimales(dato.price.last.today_change)}</td>
       <td>${quitarDecimales(dato.price.last.today_change_percent)}</td>
-      <td>${formatearPrecio(dato.price.previous_close)}</td>
+      <td>${formatearPrecio(dato.price.last.value)}</td>
     </tr>
   `;
   }
