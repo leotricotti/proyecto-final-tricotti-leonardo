@@ -260,8 +260,12 @@ body {
   text-align: right;
 }
 
+.select-hidden {
+  display: none;
+}
+
 #miSeleccion {
-  width: 28%;
+  width: 35%;
   font-family: heading;
   font-size: 1rem;
   font-weight: bold;
@@ -269,7 +273,6 @@ body {
   margin: 0 1rem 1rem 1.5rem;
   padding: 0 2.2rem  0 1rem;
 }
-
 
 .table {
   font-family: heading;
@@ -390,10 +393,6 @@ div::after {
     padding: 0 5rem;
   }
 
-  #miSeleccion {
-    width: 27%;
-  }
-
   .heading-container {
     margin: 1.5rem 3rem 0 3rem;
   }
@@ -422,7 +421,7 @@ div::after {
   }
 
   #miSeleccion {
-    width: 25%;
+    width: 30%;
   }
 
   .main-text {
@@ -482,7 +481,7 @@ div::after {
   }
 
   #miSeleccion {
-    width: 15%;
+    width: 18%;
   }
 
   .cajero-container,

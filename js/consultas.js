@@ -43,23 +43,12 @@ function mostarSaldo() {
   let tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 }
-//Funcion que captura la informacion de las cuentas simuladas y la copia al localstorage
-function capturarOperaciones() {
-  fetch("../../json/operaciones.json")
-    .then((resp) => resp.json())
-    .then((data) => {
-      let operaciones = data;
-      guardarLocal("operaciones", JSON.stringify(operaciones));
-    });
-}
-//Llamada a la funcion
-capturarOperaciones();
+//Variable que almacena la informacion de los movimientos proveniente del localstorage 
+let movimientosLocalStorage = JSON.parse(
+  localStorage.getItem("operaciones")
+);
 //Funcion que al consultar los movimientos devuelve una tabla con los movimientos de las cuentas bancarias simuladas
-function mostarMovimientos() {
-  //Codigo que recupera los movimientos simulados almacenados en el local storage
-  const movimientosLocalStorage = JSON.parse(
-    localStorage.getItem("operaciones")
-  );
+function mostarMovimientos(array) {
   //Codigo para cambiar el subtitulo del simulador
   let text = document.querySelector(".text");
   text.innerText = "Ultimos Movimientos";
@@ -83,7 +72,7 @@ function mostarMovimientos() {
   let tableBody = document.createElement("tbody");
   tableBody.className = "table-group-divider";
   //Codigo que recorre el array de operaciones creado anteriormente
-  for (const operacion of movimientosLocalStorage) {
+  for (const operacion of array) {
     tableBody.innerHTML += `
       <tr>
         <td>${operacion.fecha}</td>
@@ -98,7 +87,7 @@ function mostarMovimientos() {
   table.append(tableHead);
   table.append(tableBody);
   //Codigo que asigna a la tabla creada un padre
-  let tableContainer = document.querySelector(".table-container");
+  tableContainer = document.querySelector(".table-container");
   tableContainer.append(table);
 }
 //Funcion que modifica el HTML al momento de devolver la operacion solicitada por el usuario
@@ -134,7 +123,44 @@ function desactivarBtn() {
   btnDesactivado.innerHTML =
     '<a href="#" class="link link-disable"> <div class="btn-izquierda btn-disable" id="btn-movimientos"></div></a>';
 }
-//Evento que recibe informacion y ejecuta una funcion que devuelve el saldo disponible simulado y modifica el html
+//Funcion que quita la clase que oculta el select que ordena los movimientos
+function remove() {
+  let seleccionado = document.getElementById("seleccion");
+  seleccionado.classList.remove("select-hidden");
+}
+//Funcion que captura el cambio de seleccion realizada por el usuario
+window.onload = () => document.getElementById("miSeleccion").onchange=()=>ordenar();
+//Funcion que ordena las operaciones 
+function ordenar() {
+  let tableContainer = document.querySelector(".table-container");
+  let seleccionado = document.getElementById("miSeleccion").value;
+  if(seleccionado == "anterior") {
+    movimientosLocalStorage.sort((a, b) => {
+      if (a.fecha > b.fecha) {
+          return 1;
+      }
+      if (a.fecha < b.fecha) {
+          return -1;
+      }
+    });
+  } else if (seleccionado == "posterior") {
+    movimientosLocalStorage.sort((a, b) => {
+      if (a.fecha < b.fecha) {
+          return 1;
+      }
+      if (a.fecha > b.fecha) {
+          return -1;
+      }
+    });
+  } else if (seleccionado == "alfabetico") {
+    movimientosLocalStorage.sort(function(a, b) {
+      return a.operacion.localeCompare(b.operacion);
+  });
+  }
+  tableContainer.innerHTML = "";
+  mostarMovimientos(movimientosLocalStorage);
+}
+//Funcion que devuelve el saldo disponible simulado y modifica el html
 let btnSaldo = document.getElementById("btn-saldo");
 btnSaldo.addEventListener("click", respuestaClick);
 function respuestaClick() {
@@ -144,11 +170,12 @@ function respuestaClick() {
   modificarOpcion();
   desactivarBtn();
 }
-//Evento que recibe informacion del mouse provista por el usuario y ejecuta una funcion que devuelve los movimientos bancarios simulados y modifica el html
+//Funcion que devuelve los movimientos bancarios simulados y modifica el html
 let btnMovimientos = document.getElementById("btn-movimientos");
 btnMovimientos.addEventListener("click", respuestaClick2);
 function respuestaClick2() {
-  mostarMovimientos();
+  remove();
+  mostarMovimientos(movimientosLocalStorage);
   quitarTexto();
   agregarTexto();
   modificarOpcion();
