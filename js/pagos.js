@@ -1,5 +1,37 @@
 //Variable que almacena los servicios por vencer provenientes del localstorage
 let serviciosLocalStorage = JSON.parse(localStorage.getItem("servicios"));
+//Codigo que captura el campo input
+const pagosInput = document.getElementById("input");
+//Codigo que captura el boton que confirma la operacion
+const operar = document.getElementById("submit");
+//Funcion que captura la seleccion realizada por el usuario
+operar.addEventListener("click", function () {
+  //Llamada a la funcion que selecciona el servicio a pagar
+  seleccionarServicio(pagosInput.value);
+});
+//Codigo que captura el boton que limpia el campo input
+const modificar = document.getElementById("modificar");
+// Funcion que limpia el campo input
+modificar.onclick = () => {
+  pagosInput.value = "";
+};
+//Codigo que informa el tipo de operacion
+const nombrarOperacion = () => "Pago Servicio";
+//Funcion que captura la fecha en que se realiza la operación
+const capturarDia = () => new Date().toLocaleDateString();
+//Funcion que captura la hora en que se realiza la operacion
+const capturarHora = () => new Date().toLocaleTimeString();
+//Funcion que crea la nueva operacion
+const crearOperacion = () => {
+  nuevaOperacion = new Operacion(
+    capturarDia(),
+    capturarHora(),
+    nombrarOperacion(),
+    numeroADinero(monto),
+    numeroADinero(saldoCajaAhorro)
+  );
+  return nuevaOperacion;
+};
 //Funcion que inyecta la tabla con la informacion de los servicios por vencer
 const mostrarServicios = (servicios) => {
   //Código que crea el elemento tabla y asigna sus clases
@@ -151,21 +183,6 @@ const confirmarOperacion = (servicio, monto) => {
     }
   });
 };
-//Codigo que captura el campo input
-let pagosInput = document.getElementById("pagos-input");
-//Codigo que captura el boton que confirma la operacion
-let capturarValor = document.getElementById("pagos-submit");
-//Funcion que captura la seleccion realizada por el usuario
-capturarValor.addEventListener("click", function () {
-  //Llamada a la funcion que selecciona el servicio a pagar
-  seleccionarServicio(pagosInput.value);
-});
-//Codigo que captura el boton que limpia el campo input
-const clean = document.getElementById("limpiar-campo");
-// Funcion que limpia el campo input
-clean.onclick = () => {
-  pagosInput.value = "";
-};
 //Funcion que confirma que el usuario tenga fondos suficientes antes de realizar la operacion
 const comprobarSaldo = (servicio, monto) => {
   if (saldoCajaAhorro <= 0) {
@@ -204,23 +221,6 @@ class Operacion {
     this.saldo = saldo;
   }
 }
-//Codigo que informa el tipo de operacion
-const nombrarOperacion = () => "Pago Servicio";
-//Funcion que captura la fecha en que se realiza la operación
-const capturarDia = () => new Date().toLocaleDateString();
-//Funcion que captura la hora en que se realiza la operacion
-const capturarHora = () => new Date().toLocaleTimeString();
-//Funcion que crea la nueva operacion
-const crearOperacion = () => {
-  nuevaOperacion = new Operacion(
-    capturarDia(),
-    capturarHora(),
-    nombrarOperacion(),
-    numeroADinero(monto),
-    numeroADinero(saldoCajaAhorro)
-  );
-  return nuevaOperacion;
-};
 //Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor jsonplaceholder
 const cargarOperacion = () => {
   serviciosPagados = crearOperacion();
