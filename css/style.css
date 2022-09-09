@@ -260,6 +260,17 @@ body {
   text-align: right;
 }
 
+#miSeleccion {
+  width: 28%;
+  font-family: heading;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 3px;
+  margin: 0 1rem 1rem 1.5rem;
+  padding: 0 2.2rem  0 1rem;
+}
+
+
 .table {
   font-family: heading;
   text-transform: uppercase;
@@ -379,6 +390,10 @@ div::after {
     padding: 0 5rem;
   }
 
+  #miSeleccion {
+    width: 27%;
+  }
+
   .heading-container {
     margin: 1.5rem 3rem 0 3rem;
   }
@@ -404,6 +419,10 @@ div::after {
 
   .heading-container {
     margin: 2.5rem 5rem 0 5rem;
+  }
+
+  #miSeleccion {
+    width: 25%;
   }
 
   .main-text {
@@ -448,6 +467,10 @@ div::after {
     padding: 1rem 6rem;
   }
 
+  #miSeleccion {
+    width: 20%;
+  }
+
   .main-article {
     margin-bottom: 5rem;
   }
@@ -456,6 +479,10 @@ div::after {
 @media (min-width: 75rem) {
   .cajero-container {
     padding-bottom: 15rem;
+  }
+
+  #miSeleccion {
+    width: 15%;
   }
 
   .cajero-container,
