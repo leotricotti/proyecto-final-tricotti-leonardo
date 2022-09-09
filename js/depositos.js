@@ -15,7 +15,7 @@ const formatearNumero = () =>
   });
 //Llamada a la funcion
 formatearNumero();
-//Declaracion de la variable que va a almacenar
+//Declaracion de la variable que va a almacenar el numero ingresado por el usuario
 let unformatNumber;
 //Codigo que captura el boton Aceptar
 const operar = document.getElementById("submit");
@@ -104,7 +104,7 @@ const confirmarOperacion = () => {
     }
   });
 };
-//Funcion que almacena la nueva operaciones en una variable para luego ser enviada al servidor
+//Funcion que almacena la nueva operacion en una variable para luego ser enviada al servidor
 const cargarOperacion = () => {
   depositoRealizado = crearOperacion();
 };
