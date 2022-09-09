@@ -4,7 +4,6 @@ window.onload = () => obtenerValorDolar();
 //Variables necesarias para operar
 let valorDolarCompra;
 let valorDolarVenta;
-let costoDolarComprado;
 //Codigo que captura el boton que modifica el valor ingresado
 const modificar = document.getElementById("modificar");
 //Funcion que limpia el campo input en caso de que el usuario quiera modificar el numero ingresado
@@ -29,14 +28,14 @@ operar.onclick = () => {
   //Asignacion del valor a la variable creada anteriormente(remueve puntos y comas y divide por 100 para remover los decimales)
   unformatNumber = inputDolares.value.split(/\.|\,/).join("") / 100;
   comprobarCompra();
-};
+}
 //Funcion que calcula la compra de dolares
-const comprarDolares = () => {
-  costoDolarComprado = (
-    parseFloat(unformatNumber) * parseFloat(valorDolarVenta)
-  ).toFixed(2);
-  return costoDolarComprado;
+const comprarDolares = (input, valor) => {
+  return (
+    parseFloat(input) * parseFloat(valor)
+  );
 };
+
 //Funcion que coinvierte un numero al formato a dolar
 const numeroADolar = (dinero) => {
   return (dinero = new Intl.NumberFormat("en-US", {
@@ -101,7 +100,7 @@ const confirmarOperacion = () => {
   Swal.fire({
     icon: "question",
     title: `Desea adquirir ${numeroADolar(unformatNumber)} a  ${numeroADinero(
-      comprarDolares()
+      comprarDolares(unformatNumber, valorDolarVenta)
     )} ?`,
     confirmButtonText: "Save",
     confirmButtonColor: "#3085d6",
@@ -113,6 +112,7 @@ const confirmarOperacion = () => {
     },
   }).then((result) => {
     if (result.isConfirmed) {
+      saldoCajaAhorro -= comprarDolares(unformatNumber, valorDolarVenta);
       Swal.fire({
         icon: "success",
         title: `Operación realizada con exito. Su saldo es ${numeroADinero(
@@ -151,7 +151,6 @@ const confirmarOperacion = () => {
 //Funcion que confirma que el usuario tenga fondos suficientes y no exceda el limite de compra por operacion
 const comprobarCompra = () => {
   //Codigo que realiza la operacion
-  saldoCajaAhorro -= parseFloat(comprarDolares());
   if (inputDolares.value <= 0 || inputDolares.value > 200) {
     //Codigo que evita que el saldo se actualice si el saldo es menor a 0S
     Swal.fire({
